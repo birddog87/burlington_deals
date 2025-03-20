@@ -1,0 +1,134 @@
+deal_id,business_name,master_id,matched_name,name_match_validation,description,details,price,price_per_wing,day,category,second_category,start_time,end_time
+1,Jersey's Bar & Grill,143,Jersey's Bar & Grill,Exact match,Irish Pint Special $6.50,Irish Pint Special $6.50,6.5,,Tuesday,Drinks,Beer,12:00:00,22:00:00
+2,Jersey's Bar & Grill,143,Jersey's Bar & Grill,Exact match,Wing Night $.89,Wing Night $.89,0.89,0.89,Wednesday,Wings,,16:00:00,0:00:00
+3,Jersey's Bar & Grill,143,Jersey's Bar & Grill,Exact match,Import Premium Bottles $4.99,Import Premium Bottles $4.99,4.99,,Thursday,Drinks,Beer,15:00:00,18:00:00
+4,Jersey's Bar & Grill,143,Jersey's Bar & Grill,Exact match,Wing Night $.99,Wing Night $.99,5.5,0.99,Sunday,Wings,,16:00:00,0:00:00
+5,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Live Music Fridays,Live Music Fridays,0,,Friday,Events,Live Music,19:30:00,0:00:00
+6,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Pizza and Wings,Deluxe or pepperoni plus large fries and 2.5lbs wings,45,,Monday,Combos,Wings,,
+7,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Fajitas,8oz Chicken + 8oz Steak + 8 Shells and all the fixings,45,,Tuesday,Combos,Tacos,,
+8,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Smash Burgers,Smash burgers + fries,15,,Wednesday,Combos,Burgers,,
+9,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Fish and Chips,8oz haddock,15,,Thursday,Fish and Chips,,,
+10,Gator Ted's Tap & Grill,161,Gator Ted's Tap & Grill,Exact match,Wing Night ,Dine in only,12.5,1.25,Sunday,Wings,,,
+11,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Check manually,1/2 Price Wings,1/2 Price Wings,9.5,0.95,Monday,Wings,,,
+12,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Check manually,$1 off Mini Jugs,$1 off Mini Jugs,,,Monday,Drinks,Beer,,
+13,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$6.49 Swan Lager Pints,18oz Swan Lager,6.49,,Monday,Drinks,Beer,,
+14,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Monday,Drinks,Beer,11:30:00,17:00:00
+15,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,1/2 Price Wings,1/2 Price Wings,9.5,0.95,Tuesday,Wings,,,
+16,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$6.49 Swan Lager Pints,18oz Swan Lager,6.49,,Tuesday,Drinks,Beer,,
+17,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Tuesday,Drinks,Beer,11:30:00,17:00:00
+18,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$16.99 Pub Grub,$16.99 Pub Grub,16.99,,Wednesday,Food,,,
+19,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,All Wine 9oz For 6oz Price,All Wine 9oz For 6oz Price,,,Wednesday,Drinks,Wine,,
+20,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Wednesday,Drinks,Beer,,
+21,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,Trivia @8pm,Trivia @8pm,0,,Wednesday,Events,Trivia,20:00:00,22:00:00
+22,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$18.99 Beef Dip,$18.99 Beef Dip,18.99,,Thursday,Sandwhiches,,,
+23,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$8 Martinis,$8 Martinis,8,,Thursday,Drinks,Martini,,
+24,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Thursday,Drinks,Beer,11:30:00,17:00:00
+25,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,Yellowstone Thursdays Live Country Music 7-10pm,Yellowstone Thursdays Live Country Music 7-10pm,0,,Thursday,Events,Live Music,19:00:00,22:00:00
+26,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$14.99 1pc Fish & Chips,$14.99 1pc Fish & Chips,14.99,,Friday,Fish and Chips,,,
+27,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$6.49 Swan Lager Pints,$6.49 Swan Lager Pints,6.49,,Friday,Drinks,Beer,,
+28,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Friday,Drinks,Beer,11:30:00,17:00:00
+29,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,Live Music 8pm,Live Music 8pm,0,,Friday,Events,Live Music,,
+30,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$3.99 Kids Meals,"Kids meals 5-8pm 10 & under, max 2 kids meals per adult",3.99,,Saturday,Kids,,17:00:00,20:00:00
+31,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$6 Caesars 11:30am - 3pm,$6 Caesars 11:30am - 3pm,6,,Saturday,Drinks,Caesar,11:30:00,15:00:00
+32,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Saturday,Drinks,Beer,11:30:00,17:00:00
+33,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,Karaoke 9pm,Karaoke 9pm,0,,Saturday,Events,Karaoke,,
+34,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$3.99 Kids Meals,"Kids meals 5-8pm 10 & under, max 2 kids meals per adult",3.99,,Sunday,Kids,,17:00:00,20:00:00
+35,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,$6 Caesars 11:30am - 3pm,$6 Caesars 11:30am - 3pm,6,,Sunday,Drinks,Caesar,11:30:00,15:00:00
+36,Blk Swan and Kitchen,508,Blk Swan Kitchen Hub Downtown Burlington,Partial match,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm","$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,,Sunday,Drinks,Beer,11:30:00,17:00:00
+38,Uptown Social House,223,Uptown Social House,Exact match,Wrap day for just $13,Wrap day,13,,Monday,Food,,,
+39,Uptown Social House,223,Uptown Social House,Exact match,Jam Night at 8pm,Jam Night,0,,Monday,Events,Live Music,20:00:00,
+40,Uptown Social House,223,Uptown Social House,Exact match,Wing Day $0.89c Each,Wing Day,0.89,0.89,Tuesday,Wings,,,
+41,Uptown Social House,223,Uptown Social House,Exact match,Burger Day starting at $13,Burger Day,13,,Wednesday,Burgers,,,
+42,Uptown Social House,223,Uptown Social House,Exact match,Poker Night at 7pm,Poker Night,0,,Wednesday,Events,Cards,19:00:00,
+43,Uptown Social House,223,Uptown Social House,Exact match,"Taco Thursday, $5 each Taco, $5 Tequila shot","$5 each Taco, $5 Tequila shot, $5 Sol beer, $6 Margarita Cocktail",5,,Thursday,Food,Tacos,,
+44,Uptown Social House,223,Uptown Social House,Exact match,Biweekly at 7pm Dueling Pianos,Dueling Pianos,0,,Thursday,Events,Live Music,19:00:00,
+45,Uptown Social House,223,Uptown Social House,Exact match,Dueling Pianos from 9pm to 12 am,Dueling Pianos,0,,Friday,Events,Live Music,21:00:00,0:00:00
+46,Uptown Social House,223,Uptown Social House,Exact match,Matinee with James Anthony Band & Dueling Pianos 9pm,Matinee with James Anthony Band & Dueling Pianos,0,,Saturday,Events,Live Music,,
+47,Uptown Social House,223,Uptown Social House,Exact match,Fish and Chips $13 and $6 Caesar Cocktail,Fish and Chips,13,,Sunday,Fish and Chips,Fish and Chips,,
+48,Uptown Social House,223,Uptown Social House,Exact match,Stand up Comedy open Mic at 7pm,Stand up Comedy open Mic,0,,Sunday,Events,Comedy,19:00:00,
+49,the slye fox,590,The Slye Fox,Exact match,Classic Burger & Domestic Pint $22,Classic Burger & Domestic Pint $22,22,,Monday,Burgers,Drinks,,
+50,the slye fox,590,The Slye Fox,Exact match,Pot Pie & Domestic Pint $22,Pot Pie & Domestic Pint $22,22,,Monday,Combos,Drinks,,
+51,the slye fox,590,The Slye Fox,Exact match,Domestic Pints $6,Domestic Pints $6,6,,Monday,Drinks,Beer,,
+52,the slye fox,590,The Slye Fox,Exact match,2 For 1 Wings,2 For 1 Wings,9,0.9,Tuesday,Wings,,,
+53,the slye fox,590,The Slye Fox,Exact match,$8 Import Draught,$8 Import Draught,8,,Tuesday,Drinks,Beer,,
+54,the slye fox,590,The Slye Fox,Exact match,Pasta Feature $20,Pasta Feature $20,20,,Wednesday,Pasta,,,
+55,the slye fox,590,The Slye Fox,Exact match,9oz Wine for 6oz Price,9oz Wine for 6oz Price,,,Wednesday,Drinks,Wine,,
+56,the slye fox,590,The Slye Fox,Exact match,25% Off All Shareables & Flatbreads,25% Off All Shareables & Flatbreads,,,Thursday,Appetizers,Flatbread,,
+57,the slye fox,590,The Slye Fox,Exact match,$10 Top Shelf Shakers,$10 Top Shelf Shakers,10,,Thursday,Drinks,Cocktails,,
+58,the slye fox,590,The Slye Fox,Exact match,$5 Well Drinks,$5 Well Drinks,5,,Thursday,Drinks,Spirits,,
+59,the slye fox,590,The Slye Fox,Exact match,$13 Fish 'n' Chips,$13 Fish 'n' Chips,13,,Friday,Fish and Chips,,,
+60,the slye fox,590,The Slye Fox,Exact match,$13 Liver & Onions,$13 Liver & Onions,13,,Friday,Food,,,
+61,the slye fox,590,The Slye Fox,Exact match,$7 Vintage Cocktails,$7 Vintage Cocktails,7,,Friday,Drinks,Cocktails,,
+90,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Well Highballs,Well Highballs,5,,Friday,Drinks,Spirits,15:00:00,18:00:00
+91,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Well Highballs,Well Highballs,5,,Saturday,Drinks,Spirits,15:00:00,18:00:00
+92,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Well Highballs,Well Highballs,5,,Sunday,Drinks,Spirits,15:00:00,18:00:00
+93,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Monday,Drinks,Shots,15:00:00,18:00:00
+94,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Tuesday,Drinks,Shots,15:00:00,18:00:00
+95,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Wednesday,Drinks,Shots,15:00:00,18:00:00
+96,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Thursday,Drinks,Shots,15:00:00,18:00:00
+97,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Friday,Drinks,Shots,15:00:00,18:00:00
+98,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Saturday,Drinks,Shots,15:00:00,18:00:00
+99,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Jager + Fireball,Jager + Fireball,5,,Sunday,Drinks,Shots,15:00:00,18:00:00
+100,Tin Cup Sports Grill,209,Tin Cup Sports Grill,Exact match,Wine Wednesday's $1 an oz,Peller Family Reserve VQA Cab Merlot + Chardonnay,,,Wednesday,Drinks,Wine,11:00:00,0:00:00
+101,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Monday,Breakfast,,,
+102,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Tuesday,Breakfast,,,
+103,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Wednesday,Breakfast,,,
+104,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Thursday,Breakfast,,,
+105,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Friday,Breakfast,,,
+106,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Saturday,Breakfast,,,
+107,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,"Breakfast Special Bacon Eggs, Homefries and Toast","Dine-in only, Mon-Fri 7AM-9AM",6.99,,Sunday,Breakfast,,,
+108,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,Bacon Cheddar Jalapeno Ranch Burger,"Served with Chicken Tomato Vegetable Soup or Cheddar Broccoli Soup, Substitute Soup for Fries or Homefries for $1",13.99,,Monday,Burgers,,11:00:00,14:00:00
+109,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,California Burger,"Served with Chicken Tomato Vegetable Soup or Cheddar Broccoli Soup, Substitute Soup for Fries or Homefries for $1",13.99,,Tuesday,Burgers,,11:00:00,14:00:00
+110,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,Melt Burger,"Served with Chicken Tomato Vegetable Soup or Cheddar Broccoli Soup, Substitute Soup for Fries or Homefries for $1",13.99,,Wednesday,Burgers,,11:00:00,14:00:00
+111,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,Loaded Mushroom Burger,"Served with Chicken Tomato Vegetable Soup or Cheddar Broccoli Soup, Substitute Soup for Fries or Homefries for $1",13.99,,Thursday,Burgers,,11:00:00,14:00:00
+112,Stacked Pancake & Breakfast House Burlington,73,Stacked Pancake & Breakfast House Burlington,Exact match,BBQ Philly Burger,"Served with Chicken Tomato Vegetable Soup or Cheddar Broccoli Soup, Substitute Soup for Fries or Homefries for $1",13.99,,Friday,Burgers,,11:00:00,14:00:00
+113,Nostalgia Games Cafe,304,Nostalgia Games Cafe,Exact match,Pizza Party,Receive 2 FREE toppings when you order a pizza,,,Tuesday,Pizza,,,
+114,Nostalgia Games Cafe,304,Nostalgia Games Cafe,Exact match,BOGO Snacks,Snacks are buy one get one 50% off,,,Wednesday,Snacks,,,
+115,Nostalgia Games Cafe,304,Nostalgia Games Cafe,Exact match,Cookie Combo,Get a cookie with a regular Brewed Coffee or Tea,4,,Thursday,Combos,,,
+116,JC Bagels,444,JC's Hot Bagels,Check manually,Monday Breakfast Special - Sausage & Egg,Sausage & Egg Breakfast Sandwich,10.99,,Monday,Breakfast,,,
+117,JC Bagels,444,JC's Hot Bagels,Check manually,Monday Lunch Special - Ham,Ham,15.49,,Monday,Lunch,,,
+118,JC Bagels,444,JC's Hot Bagels,Check manually,Tuesday Breakfast Special - BLT,BLT Breakfast Sandwich,10.99,,Tuesday,Breakfast,,,
+119,JC Bagels,444,JC's Hot Bagels,Check manually,Tuesday Lunch Special - Egg Salad,Egg Salad,15.49,,Tuesday,Lunch,,,
+120,JC Bagels,444,JC's Hot Bagels,Check manually,Wednesday Breakfast Special - Western,Western Breakfast Sandwich,10.99,,Wednesday,Breakfast,,,
+121,JC Bagels,444,JC's Hot Bagels,Check manually,Wednesday Lunch Special - Tuna Salad,Tuna Salad,15.49,,Wednesday,Lunch,,,
+122,JC Bagels,444,JC's Hot Bagels,Check manually,Thursday Breakfast Special - Bacon & Egg,Bacon & Egg Breakfast Sandwich,10.99,,Thursday,Breakfast,,,
+123,JC Bagels,444,JC's Hot Bagels,Check manually,Thursday Lunch Special - Roast Beef,Roast Beef,15.49,,Thursday,Lunch,,,
+124,JC Bagels,444,JC's Hot Bagels,Check manually,Friday Breakfast Special - Bacon & Egg,Bacon & Egg Breakfast Sandwich,10.99,,Friday,Breakfast,,,
+125,JC Bagels,444,JC's Hot Bagels,Check manually,Friday Lunch Special - Tuna Salad,Tuna Salad,15.49,,Friday,Lunch,,,
+126,JC Bagels,444,JC's Hot Bagels,Check manually,Weekend Breakfast Special - Bacon and Egg on a Bagel,Bacon and Egg on a Bagel,10.99,,Saturday,Breakfast,,,
+127,JC Bagels,444,JC's Hot Bagels,Check manually,Weekend Breakfast Special - Bacon and Egg on a Bagel,Bacon and Egg on a Bagel,10.99,,Sunday,Breakfast,,,
+129,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Date Night Dinner for Two,,55,,Tuesday,Combos,,,
+130,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,1/2 Price Wine Bottles,(750 ml),,,Wednesday,Drinks,Wine,,
+131,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,1/2 Price Wings,,9,0.9,Thursday,Wings,,,
+132,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,$6 Coors Light (16oz),$6 Coors Light (16oz),6,,Thursday,Drinks,Beer,,
+133,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Monday,Kids,,,
+134,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Tuesday,Kids,,,
+135,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Wednesday,Kids,,,
+136,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Thursday,Kids,,,
+137,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Friday,Kids,,,
+138,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Saturday,Kids,,,
+139,Kelseys Original Roadhouse,638,Kelseys Original Roadhouse,Exact match,Donate $5 and get 3 Free Kids Meals,With the purchase of an adult entrée,5,,Sunday,Kids,,,
+140,The Dickens,608,The Dickens,Exact match,Industry Night,"Rail, Jager, El Jimador, Jameson",6,,Monday,Drinks,Spirits,21:00:00,2:00:00
+141,The Dickens,608,The Dickens,Exact match,Industry Night,6oz Jackson Triggs Wines,6,,Monday,Drinks,Wine,21:00:00,2:00:00
+142,The Dickens,608,The Dickens,Exact match,Industry Night,"Molson Canadian, Coors Light, Creemore",6,,Monday,Drinks,Beer,21:00:00,2:00:00
+143,The Dickens,608,The Dickens,Exact match,Burger & Beer,Burger & Beer 17.70,17.7,,Monday,Combos,,16:00:00,2:00:00
+144,The Dickens,608,The Dickens,Exact match,Burgers,Original Burger $11,11,,Tuesday,Burgers,,,
+145,The Dickens,608,The Dickens,Exact match,Burgers,Dickens Burger +3,14,,Wednesday,Burgers,,,
+146,The Dickens,608,The Dickens,Exact match,Wings & Whistle,Choice of Classic or Breaded Wings,9,0.9,Tuesday,Wings,,16:00:00,2:00:00
+147,The Dickens,608,The Dickens,Exact match,Wings & Whistle,18oz Steam Whistle,7,,Tuesday,Drinks,Beer,16:00:00,2:00:00
+148,The Dickens,608,The Dickens,Exact match,Fish,Haddock 1 piece,12,,Friday,Fish and Chips,,16:00:00,2:00:00
+149,The Dickens,608,The Dickens,Exact match,Fish,Haddock 2 pieces,17,,Saturday,Fish and Chips,,16:00:00,2:00:00
+150,The Dickens,608,The Dickens,Exact match,Roast,Roast Beef Yorkie 18,18,,Sunday,Food,,16:00:00,2:00:00
+151,The Dickens,608,The Dickens,Exact match,Happy Hour 2-5pm ,$6 Coors Light & Canadian,6,,Monday,Drinks,Beer,14:00:00,17:00:00
+152,The Dickens,608,The Dickens,Exact match,Happy Hour 2-5pm ,6oz Jackson Triggs Wines,6,,Tuesday,Drinks,Wine,14:00:00,17:00:00
+153,The Dickens,608,The Dickens,Exact match,Happy Hour 2-5pm ,All Bar Rail,6,,Wednesday,Drinks,Spirits,14:00:00,17:00:00
+154,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Burger & Beer,Burger & Beer 17.70,17.7,,Monday,Combos,,,
+155,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Burgers,Original Burger $11,11,,Tuesday,Burgers,,,
+156,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Burgers,Signature Burgers +3,14,,Wednesday,Burgers,,,
+157,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Wings & Whistle,Choice of Classic or Breaded Wings 9,9,0.9,Tuesday,Wings,,,
+158,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Wings & Whistle,18oz Steam Whistle 7,7,,Tuesday,Drinks,Beer,,
+159,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Thirsty,"9oz wine for 6oz price, 50% off all wine bottles",,,Thursday,Drinks,Wine,,
+160,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,25% off all appetizers & flatbreads,25% off all appetizers & flatbreads,,,Thursday,Appetizers,,,
+161,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Fish and Chips,Haddock 1pc 12,12,,Friday,Fish and Chips,,,
+162,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Fish and Chips,Haddock 2pc 17,17,,Saturday,Fish and Chips,,,
+163,District Kitchen and Bar,501,District Kitchen + Bar,Partial match,Fish and Chips,Halibut 1pc,18,,Sunday,Fish and Chips,,,
