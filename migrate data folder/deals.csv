@@ -1,0 +1,208 @@
+deal_id,restaurant_id,title,description,price,day_of_week,category,second_category,start_time,end_time,is_approved,is_promoted,promoted_until,created_by,created_at,updated_at,price_per_wing,deal_type,category_details,price_type,flat_price,percentage_discount,promotion_tier
+163,858,Pasta Night,Pasta for $14 (Excludes Seafood & Lobster Pasta Entrée),14.00,Monday,Pasta,Food,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 05:02:41.75337,NULL,flat,Excludes Seafood & Lobster Pasta Entrée,fixed,14.00,NULL,0
+55,859,Deal 56,25% Off All Shareables & Flatbreads,0.00,Thursday,Appetizers,Flatbread,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.169927,2025-01-01 16:21:58.202665,NULL,percentage,NULL,percentage,NULL,25.00,0
+57,859,Deal 58,$5 Well Drinks,5.00,Thursday,Drinks,Spirits,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.250204,2024-12-31 21:57:03.254976,NULL,flat,NULL,fixed,5.00,NULL,0
+17,399,Deal 17,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Tuesday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.687902,2024-12-31 22:43:17.897424,NULL,flat,NULL,fixed,6.99,NULL,0
+18,399,Deal 18,$16.99 Pub Grub,16.99,Wednesday,Food,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.726164,2024-12-31 22:43:19.719812,NULL,flat,NULL,fixed,16.99,NULL,0
+16,399,Deal 16,$6.49 Swan Lager Pints,6.49,Tuesday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.649913,2024-12-31 22:43:21.118498,NULL,flat,NULL,fixed,6.49,NULL,0
+13,399,Deal 13,$6.49 Swan Lager Pints,6.49,Monday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.53189,2024-12-31 22:43:25.157656,NULL,flat,NULL,fixed,6.49,NULL,0
+9,846,Deal 9,Fish and Chips,15.00,Thursday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.368677,2024-12-31 22:43:29.666252,NULL,flat,NULL,fixed,15.00,NULL,0
+8,846,Deal 8,Smash Burgers,15.00,Wednesday,Combos,Burgers,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.331776,2024-12-31 22:43:30.773819,NULL,flat,NULL,fixed,15.00,NULL,0
+7,846,Deal 7,Fajitas,45.00,Tuesday,Combos,Tacos,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.292136,2024-12-31 22:43:34.579707,NULL,flat,NULL,fixed,45.00,NULL,0
+6,846,Deal 6,Pizza and Wings,45.00,Monday,Combos,Wings,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.255365,2024-12-31 22:43:35.534546,NULL,flat,NULL,fixed,45.00,NULL,0
+166,858,Asian Night Combo,25% off Asian Night items + 1 LB Wings OR Classic Burger & Domestic Pint,0.00,Wednesday,Combos,Wings,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:12:56.539774,NULL,percentage,Asian Wok of Fame options,percentage,NULL,25.00,0
+164,858,Appetizers Half Price,Selected appetizers are half price!,0.00,Monday,Appetizers,NULL,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:06.270567,NULL,flat,Selected apps only,fixed,0.00,NULL,0
+132,845,Deal 162,Fish and Chips,17.00,Saturday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.292823,2024-12-31 22:41:03.948161,NULL,flat,NULL,fixed,17.00,NULL,0
+131,845,Deal 161,Fish and Chips,12.00,Friday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.249914,2024-12-31 22:41:05.37333,NULL,flat,NULL,fixed,12.00,NULL,0
+145,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Friday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.892792,2025-01-05 16:57:13.471557,NULL,flat,NULL,fixed,5.95,NULL,0
+146,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Monday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.897208,2025-01-05 16:57:21.182728,NULL,flat,NULL,fixed,5.95,NULL,0
+5,846,Deal 5,Live Music Fridays,0.00,Friday,Events,Live Music,19:30:00,00:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.216619,2024-12-31 22:43:36.56516,NULL,event,NULL,percentage,NULL,NULL,0
+45,1,Deal 46,Matinee with James Anthony Band & Dueling Pianos 9pm,0.00,Saturday,Events,Live Music,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.780268,2025-01-01 16:22:07.373375,NULL,event,NULL,percentage,NULL,NULL,0
+44,1,Deal 45,Dueling Pianos from 9pm to 12 am,0.00,Friday,Events,Live Music,21:00:00,00:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.742571,2025-01-01 16:22:08.324453,NULL,event,NULL,percentage,NULL,NULL,0
+43,1,Deal 44,Biweekly at 7pm Dueling Pianos,0.00,Thursday,Events,Live Music,19:00:00,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.70444,2025-01-01 16:22:09.184374,NULL,event,NULL,percentage,NULL,NULL,0
+41,1,Deal 42,Poker Night at 7pm,0.00,Wednesday,Events,Cards,19:00:00,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.62905,2025-01-01 17:37:22.213771,NULL,event,NULL,percentage,NULL,NULL,0
+38,1,Deal 39,Jam Night at 8pm,0.00,Monday,Events,Live Music,20:00:00,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.515911,2025-01-01 17:37:25.715097,NULL,event,NULL,percentage,NULL,NULL,0
+33,399,Deal 33,Karaoke 9pm,0.00,Saturday,Events,Karaoke,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.324706,2025-01-01 17:37:28.906518,NULL,event,NULL,percentage,NULL,NULL,0
+29,399,Deal 29,Live Music 8pm,0.00,Friday,Events,Live Music,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.161134,2025-01-01 17:37:32.782445,NULL,event,NULL,percentage,NULL,NULL,0
+25,399,Deal 25,Yellowstone Thursdays Live Country Music 7-10pm,0.00,Thursday,Events,Live Music,19:00:00,22:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.000261,2025-01-01 17:37:36.473785,NULL,event,NULL,percentage,NULL,NULL,0
+21,399,Deal 21,Trivia @8pm,0.00,Wednesday,Events,Trivia,20:00:00,22:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.842301,2025-01-01 17:37:40.060531,NULL,event,NULL,percentage,NULL,NULL,0
+47,1,Deal 48,Stand up Comedy open Mic at 7pm,0.00,Sunday,Events,Comedy,19:00:00,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.860999,2025-01-01 16:22:05.548232,NULL,event,NULL,percentage,NULL,NULL,0
+170,858,Ribs & Wings Combo,1/2 Rack Ribs & 1/2 Pound Wings Combo,20.00,Saturday,Combos,Wings,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,Served with fries and coleslaw,fixed,20.00,NULL,0
+172,858,British Sunday Combo,2 LB Wings & Domestic 60oz Pitcher,29.75,Sunday,Combos,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,British Sunday special,fixed,29.75,NULL,0
+152,870,Majesty's Monday: Rule the Day with 25% Off!,"Step into royalty every Monday with a 25% discount on our most iconic dishes! Satisfy your appetite and don't miss out on this majestic offer!
+
+ 
+
+ 
+
+Valid on:
+
+Bangers and Mash,
+
+Steak & Guinness Mushroom Pie,
+
+Shepherd’s Pie & Gravy,
+
+Roasted Beef Yorkshire Pudding",0.00,Monday,Entrees,Pub,NULL,NULL,t,f,NULL,NULL,2025-01-05 17:00:56.464112,2025-01-05 17:03:05.54954,NULL,percentage,NULL,percentage,NULL,25.00,0
+171,858,British Sunday,25% off British Fare + 1 LB Wings & Domestic Pint,0.00,Sunday,Combos,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,percentage,Options from British Fare,percentage,NULL,25.00,0
+130,845,Deal 160,25% off all appetizers & flatbreads,0.00,Thursday,Appetizers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.200139,2024-12-31 22:41:07.745966,NULL,percentage,NULL,percentage,NULL,25.00,0
+3,855,Deal 3,Import Premium Bottles $4.99,4.99,Thursday,Drinks,Beer,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.134098,2024-12-31 22:43:38.518856,NULL,flat,NULL,fixed,4.99,NULL,0
+1,855,Deal 1,Irish Pint Special $6.50,6.50,Tuesday,Drinks,Beer,12:00:00,22:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.056125,2024-12-31 22:43:40.432029,NULL,flat,NULL,fixed,6.50,NULL,0
+65,824,Deal 94,Jager + Fireball,5.00,Tuesday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.586025,2025-01-01 16:21:50.116558,NULL,flat,NULL,fixed,5.00,NULL,0
+64,824,Deal 93,Jager + Fireball,5.00,Monday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.548158,2025-01-01 16:21:51.108402,NULL,flat,NULL,fixed,5.00,NULL,0
+63,824,Deal 92,Well Highballs,5.00,Sunday,Drinks,Spirits,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.508779,2025-01-01 16:21:52.134505,NULL,flat,NULL,fixed,5.00,NULL,0
+61,824,Deal 90,Well Highballs,5.00,Friday,Drinks,Spirits,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.432251,2025-01-01 16:21:54.186293,NULL,flat,NULL,fixed,5.00,NULL,0
+60,859,Deal 61,$7 Vintage Cocktails,7.00,Friday,Drinks,Cocktails,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.390032,2025-01-01 16:21:55.244659,NULL,flat,NULL,fixed,7.00,NULL,0
+59,859,Deal 60,$13 Liver & Onions,13.00,Friday,Food,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.343676,2025-01-01 16:21:56.252332,NULL,flat,NULL,fixed,13.00,NULL,0
+58,859,Deal 59,$13 Fish 'n' Chips,13.00,Friday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.294176,2025-01-01 16:21:57.240448,NULL,flat,NULL,fixed,13.00,NULL,0
+149,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Wednesday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.922431,2025-01-05 16:57:37.924215,NULL,flat,NULL,fixed,5.95,NULL,0
+46,1,Deal 47,Fish and Chips $13 and $6 Caesar Cocktail,13.00,Sunday,Fish and Chips,Fish and Chips,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.821144,2025-01-01 16:22:06.440721,NULL,flat,NULL,fixed,13.00,NULL,0
+42,1,Deal 43,"Taco Thursday, $5 each Taco, $5 Tequila shot",5.00,Thursday,Food,Tacos,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.666414,2025-01-01 17:37:20.79802,NULL,flat,NULL,fixed,5.00,NULL,0
+40,1,Deal 41,Burger Day starting at $13,13.00,Wednesday,Burgers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.590644,2025-01-01 17:37:23.441031,NULL,flat,NULL,fixed,13.00,NULL,0
+37,1,Deal 38,Wrap day for just $13,13.00,Monday,Food,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.478108,2025-01-01 17:37:26.838555,NULL,flat,NULL,fixed,13.00,NULL,0
+32,399,Deal 32,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Saturday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.278436,2025-01-01 17:37:29.910697,NULL,flat,NULL,fixed,6.99,NULL,0
+31,399,Deal 31,$6 Caesars 11:30am - 3pm,6.00,Saturday,Drinks,Caesar,11:30:00,15:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.236051,2025-01-01 17:37:30.843608,NULL,flat,NULL,fixed,6.00,NULL,0
+30,399,Deal 30,$3.99 Kids Meals,3.99,Saturday,Kids,,17:00:00,20:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.19881,2025-01-01 17:37:31.835885,NULL,flat,NULL,fixed,3.99,NULL,0
+27,399,Deal 27,$6.49 Swan Lager Pints,6.49,Friday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.076123,2025-01-01 17:37:34.720196,NULL,flat,NULL,fixed,6.49,NULL,0
+26,399,Deal 26,$14.99 1pc Fish & Chips,14.99,Friday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.037694,2025-01-01 17:37:35.582671,NULL,flat,NULL,fixed,14.99,NULL,0
+24,399,Deal 24,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Thursday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.961906,2025-01-01 17:37:37.34101,NULL,flat,NULL,fixed,6.99,NULL,0
+23,399,Deal 23,$8 Martinis,8.00,Thursday,Drinks,Martini,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.923389,2025-01-01 17:37:38.261771,NULL,flat,NULL,fixed,8.00,NULL,0
+22,399,Deal 22,$18.99 Beef Dip,18.99,Thursday,Sandwhiches,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.87986,2025-01-01 17:37:39.153059,NULL,flat,NULL,fixed,18.99,NULL,0
+15,399,Deal 15,1/2 Price Wings,9.50,Tuesday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.611927,2024-12-31 22:43:22.498064,1.06,flat,NULL,fixed,9.50,NULL,0
+11,399,Deal 11,1/2 Price Wings,9.50,Monday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.448151,2024-12-31 22:43:27.338023,1.06,flat,NULL,fixed,9.50,NULL,0
+12,399,Deal 12,$1 off Mini Jugs,0.00,Monday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.492228,2024-12-31 22:43:26.244227,NULL,flat,NULL,fixed,0.00,NULL,0
+10,846,Deal 10,Wing Night ,12.50,Sunday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.41073,2024-12-31 22:43:28.577499,1.39,flat,NULL,fixed,12.50,NULL,0
+110,976,Deal 140,Industry Night,6.00,Monday,Drinks,Spirits,21:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.399911,2024-12-31 17:32:05.229501,NULL,flat,NULL,fixed,6.00,NULL,0
+20,399,Deal 20,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Wednesday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.804947,2025-01-01 17:37:40.962878,NULL,flat,NULL,fixed,6.99,NULL,0
+109,869,Deal 139,Donate $5 and get 3 Free Kids Meals,5.00,Sunday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.362394,2024-12-31 17:32:06.361955,NULL,flat,NULL,fixed,5.00,NULL,0
+108,869,Deal 138,Donate $5 and get 3 Free Kids Meals,5.00,Saturday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.323861,2024-12-31 17:32:07.587765,NULL,flat,NULL,fixed,5.00,NULL,0
+102,869,Deal 132,$6 Coors Light (16oz),6.00,Thursday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.072048,2024-12-31 21:56:40.806558,NULL,flat,NULL,fixed,6.00,NULL,0
+70,824,Deal 99,Jager + Fireball,5.00,Sunday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.786043,2024-12-31 21:56:55.443991,NULL,flat,NULL,fixed,5.00,NULL,0
+128,845,Deal 158,Wings & Whistle,7.00,Tuesday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.120397,2024-12-31 22:41:10.118071,NULL,flat,NULL,fixed,7.00,NULL,0
+126,845,Deal 156,Burgers,14.00,Wednesday,Burgers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.037658,2024-12-31 22:41:12.385031,NULL,flat,NULL,fixed,14.00,NULL,0
+124,845,Deal 154,Burger & Beer,17.70,Monday,Combos,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.958052,2024-12-31 22:41:14.565939,NULL,flat,NULL,fixed,17.70,NULL,0
+123,976,Deal 153,Happy Hour 2-5pm ,6.00,Wednesday,Drinks,Spirits,14:00:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.917112,2024-12-31 22:41:15.582705,NULL,flat,NULL,fixed,6.00,NULL,0
+122,976,Deal 152,Happy Hour 2-5pm ,6.00,Tuesday,Drinks,Wine,14:00:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.869979,2024-12-31 22:41:16.633605,NULL,flat,NULL,fixed,6.00,NULL,0
+121,976,Deal 151,Happy Hour 2-5pm ,6.00,Monday,Drinks,Beer,14:00:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.831923,2024-12-31 22:41:17.658475,NULL,flat,NULL,fixed,6.00,NULL,0
+120,976,Deal 150,Roast,18.00,Sunday,Food,,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.792526,2024-12-31 22:41:18.664849,NULL,flat,NULL,fixed,18.00,NULL,0
+118,976,Deal 148,Fish,12.00,Friday,Fish and Chips,,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.710485,2024-12-31 22:41:20.856562,NULL,flat,NULL,fixed,12.00,NULL,0
+117,976,Deal 147,Wings & Whistle,7.00,Tuesday,Drinks,Beer,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.671729,2024-12-31 22:41:21.925507,NULL,flat,NULL,fixed,7.00,NULL,0
+115,976,Deal 145,Burgers,14.00,Wednesday,Burgers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.594599,2024-12-31 22:41:24.215965,NULL,flat,NULL,fixed,14.00,NULL,0
+114,976,Deal 144,Burgers,11.00,Tuesday,Burgers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.556116,2024-12-31 22:41:25.149036,NULL,flat,NULL,fixed,11.00,NULL,0
+167,858,Fajita Night,25% off all sizzling fajitas + 1 LB Wings & Domestic Tall Boy,0.00,Thursday,Combos,Food,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:00.74548,NULL,percentage,Sizzlin’ Fajitas,percentage,NULL,25.00,0
+113,976,Deal 143,Burger & Beer,17.70,Monday,Combos,,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.51729,2024-12-31 22:41:26.199489,NULL,flat,NULL,fixed,17.70,NULL,0
+111,976,Deal 141,Industry Night,6.00,Monday,Drinks,Wine,21:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.4384,2024-12-31 22:41:27.227841,NULL,flat,NULL,fixed,6.00,NULL,0
+106,869,Deal 136,Donate $5 and get 3 Free Kids Meals,5.00,Thursday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.2409,2024-12-31 22:41:28.234218,NULL,flat,NULL,fixed,5.00,NULL,0
+105,869,Deal 135,Donate $5 and get 3 Free Kids Meals,5.00,Wednesday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.18988,2024-12-31 22:41:29.258236,NULL,flat,NULL,fixed,5.00,NULL,0
+104,869,Deal 134,Donate $5 and get 3 Free Kids Meals,5.00,Tuesday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.152067,2024-12-31 22:41:30.19598,NULL,flat,NULL,fixed,5.00,NULL,0
+103,869,Deal 133,Donate $5 and get 3 Free Kids Meals,5.00,Monday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.112653,2024-12-31 22:41:31.17392,NULL,flat,NULL,fixed,5.00,NULL,0
+99,869,Deal 129,Date Night Dinner for Two,55.00,Tuesday,Combos,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.958139,2024-12-31 22:41:33.960597,NULL,flat,NULL,fixed,55.00,NULL,0
+98,679,Deal 127,Weekend Breakfast Special - Bacon and Egg on a Bagel,10.99,Sunday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.921694,2024-12-31 22:41:34.932162,NULL,flat,NULL,fixed,10.99,NULL,0
+97,679,Deal 126,Weekend Breakfast Special - Bacon and Egg on a Bagel,10.99,Saturday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.870042,2024-12-31 22:41:35.913715,NULL,flat,NULL,fixed,10.99,NULL,0
+96,679,Deal 125,Friday Lunch Special - Tuna Salad,15.49,Friday,Lunch,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.831303,2024-12-31 22:41:36.857939,NULL,flat,NULL,fixed,15.49,NULL,0
+93,679,Deal 122,Thursday Breakfast Special - Bacon & Egg,10.99,Thursday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.713865,2024-12-31 22:43:45.651826,NULL,flat,NULL,fixed,10.99,NULL,0
+91,679,Deal 120,Wednesday Breakfast Special - Western,10.99,Wednesday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.635827,2024-12-31 22:43:47.729524,NULL,flat,NULL,fixed,10.99,NULL,0
+90,679,Deal 119,Tuesday Lunch Special - Egg Salad,15.49,Tuesday,Lunch,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.59764,2024-12-31 22:43:51.76989,NULL,flat,NULL,fixed,15.49,NULL,0
+89,679,Deal 118,Tuesday Breakfast Special - BLT,10.99,Tuesday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.552048,2024-12-31 22:43:52.691569,NULL,flat,NULL,fixed,10.99,NULL,0
+87,679,Deal 116,Monday Breakfast Special - Sausage & Egg,10.99,Monday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.476879,2024-12-31 22:43:54.71867,NULL,flat,NULL,fixed,10.99,NULL,0
+86,954,Deal 115,Cookie Combo,4.00,Thursday,Combos,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.438961,2024-12-31 22:43:55.814266,NULL,flat,NULL,fixed,4.00,NULL,0
+83,299,Deal 112,BBQ Philly Burger,13.99,Friday,Burgers,,11:00:00,14:00:00,t,f,NULL,NULL,2024-12-31 05:24:48.312565,2024-12-31 22:43:59.080476,NULL,flat,NULL,fixed,13.99,NULL,0
+82,299,Deal 111,Loaded Mushroom Burger,13.99,Thursday,Burgers,,11:00:00,14:00:00,t,f,NULL,NULL,2024-12-31 05:24:48.274002,2025-01-01 16:21:32.973406,NULL,flat,NULL,fixed,13.99,NULL,0
+80,299,Deal 109,California Burger,13.99,Tuesday,Burgers,,11:00:00,14:00:00,t,f,NULL,NULL,2024-12-31 05:24:48.195851,2025-01-01 16:21:37.033844,NULL,flat,NULL,fixed,13.99,NULL,0
+79,299,Deal 108,Bacon Cheddar Jalapeno Ranch Burger,13.99,Monday,Burgers,,11:00:00,14:00:00,t,f,NULL,NULL,2024-12-31 05:24:48.154479,2025-01-01 16:21:38.22475,NULL,flat,NULL,fixed,13.99,NULL,0
+78,299,Deal 107,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Sunday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.115443,2025-01-01 16:21:39.198479,NULL,flat,NULL,fixed,6.99,NULL,0
+77,299,Deal 106,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Saturday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.069831,2025-01-01 16:21:40.21492,NULL,flat,NULL,fixed,6.99,NULL,0
+76,299,Deal 105,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Friday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.032916,2025-01-01 16:21:41.209656,NULL,flat,NULL,fixed,6.99,NULL,0
+75,299,Deal 104,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Thursday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.982648,2025-01-01 16:21:42.17421,NULL,flat,NULL,fixed,6.99,NULL,0
+74,299,Deal 103,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Wednesday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.942219,2025-01-01 16:21:43.138498,NULL,flat,NULL,fixed,6.99,NULL,0
+73,299,Deal 102,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Tuesday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.897854,2025-01-01 16:21:44.104401,NULL,flat,NULL,fixed,6.99,NULL,0
+72,299,Deal 101,"Breakfast Special Bacon Eggs, Homefries and Toast",6.99,Monday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.861337,2025-01-01 16:21:45.089433,NULL,flat,NULL,fixed,6.99,NULL,0
+84,954,Deal 113,Pizza Party,0.00,Tuesday,Pizza,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.352668,2024-12-31 22:43:57.909958,NULL,flat,NULL,fixed,0.00,NULL,0
+4,855,Deal 4,Wing Night $.99,8.91,Sunday,Wings,,16:00:00,00:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.172242,2024-12-31 22:43:37.560782,0.99,flat,NULL,fixed,8.91,NULL,0
+127,845,Deal 157,Wings & Whistle,9.00,Tuesday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.075947,2024-12-31 22:41:11.224259,1.00,flat,NULL,fixed,9.00,NULL,0
+85,954,Deal 114,BOGO Snacks,0.00,Wednesday,Snacks,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.392113,2024-12-31 22:43:56.825086,NULL,flat,NULL,fixed,0.00,NULL,0
+129,845,Deal 159,Thirsty,0.00,Thursday,Drinks,Wine,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.156084,2024-12-31 22:41:08.976082,NULL,flat,NULL,fixed,0.00,NULL,0
+19,399,Deal 19,All Wine 9oz For 6oz Price,0.00,Wednesday,Drinks,Wine,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:45.765238,2025-01-01 17:37:41.884045,NULL,flat,NULL,fixed,0.00,NULL,0
+53,859,Deal 54,Pasta Feature $20,20.00,Wednesday,Pasta,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.092605,2025-01-01 16:22:00.177404,NULL,flat,NULL,fixed,20.00,NULL,0
+52,859,Deal 53,$8 Import Draught,8.00,Tuesday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.054793,2025-01-01 16:22:01.074079,NULL,flat,NULL,fixed,8.00,NULL,0
+50,859,Deal 51,Domestic Pints $6,6.00,Monday,Drinks,Beer,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.97859,2025-01-01 16:22:02.813698,NULL,flat,NULL,fixed,6.00,NULL,0
+49,859,Deal 50,Pot Pie & Domestic Pint $22,22.00,Monday,Combos,Drinks,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.940446,2025-01-01 16:22:03.796228,NULL,flat,NULL,fixed,22.00,NULL,0
+112,976,Deal 142,Industry Night,6.00,Monday,Drinks,Beer,21:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.477288,2024-12-31 17:32:02.717966,NULL,flat,NULL,fixed,6.00,NULL,0
+107,869,Deal 137,Donate $5 and get 3 Free Kids Meals,5.00,Friday,Kids,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.28609,2024-12-31 17:32:09.572917,NULL,flat,NULL,fixed,5.00,NULL,0
+148,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Thursday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.917261,2025-01-05 16:57:23.78961,NULL,flat,NULL,fixed,5.95,NULL,0
+56,859,Deal 57,$10 Top Shelf Shakers,10.00,Thursday,Drinks,Cocktails,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.212925,2024-12-31 21:57:05.461119,NULL,flat,NULL,fixed,10.00,NULL,0
+69,824,Deal 98,Jager + Fireball,5.00,Saturday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.74788,2025-01-01 16:21:46.082328,NULL,flat,NULL,fixed,5.00,NULL,0
+67,824,Deal 96,Jager + Fireball,5.00,Thursday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.670377,2025-01-01 16:21:48.194697,NULL,flat,NULL,fixed,5.00,NULL,0
+66,824,Deal 95,Jager + Fireball,5.00,Wednesday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.630394,2025-01-01 16:21:49.162538,NULL,flat,NULL,fixed,5.00,NULL,0
+147,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Tuesday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.912924,2025-01-05 16:57:43.648671,NULL,flat,NULL,fixed,5.95,NULL,0
+133,845,Deal 163,Fish and Chips,18.00,Sunday,Fish and Chips,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:50.336038,2024-12-31 22:41:02.636039,NULL,flat,NULL,fixed,18.00,NULL,0
+125,845,Deal 155,Burgers,11.00,Tuesday,Burgers,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.997015,2024-12-31 22:41:13.493952,NULL,flat,NULL,fixed,11.00,NULL,0
+119,976,Deal 149,Fish,17.00,Saturday,Fish and Chips,,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.7545,2024-12-31 22:41:19.759977,NULL,flat,NULL,fixed,17.00,NULL,0
+14,399,Deal 14,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Monday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.569841,2024-12-31 22:43:23.935674,NULL,flat,NULL,fixed,6.99,NULL,0
+92,679,Deal 121,Wednesday Lunch Special - Tuna Salad,15.49,Wednesday,Lunch,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.674558,2024-12-31 22:43:46.721814,NULL,flat,NULL,fixed,15.49,NULL,0
+81,299,Deal 110,Melt Burger,13.99,Wednesday,Burgers,,11:00:00,14:00:00,t,f,NULL,NULL,2024-12-31 05:24:48.236836,2025-01-01 16:21:35.216153,NULL,flat,NULL,fixed,13.99,NULL,0
+68,824,Deal 97,Jager + Fireball,5.00,Friday,Drinks,Shots,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.708997,2025-01-01 16:21:47.288847,NULL,flat,NULL,fixed,5.00,NULL,0
+62,824,Deal 91,Well Highballs,5.00,Saturday,Drinks,Spirits,15:00:00,18:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.470382,2025-01-01 16:21:53.191144,NULL,flat,NULL,fixed,5.00,NULL,0
+158,858,Late Night Wing Special,9pm to close every night. ,7.00,Saturday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.883986,2025-01-06 04:31:41.620416,0.7,flat,NULL,fixed,7.00,NULL,0
+54,859,Deal 55,9oz Wine for 6oz Price,0.00,Wednesday,Drinks,Wine,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.132459,2025-01-01 16:21:59.18642,NULL,flat,NULL,fixed,0.00,NULL,0
+153,27,1/2 price wings,50% off wings at Shooterville!,7.99,Wednesday,Wings,,NULL,NULL,t,f,NULL,NULL,2025-01-05 17:02:45.673047,2025-01-06 03:52:44.330045,0.89,flat,NULL,fixed,7.99,NULL,0
+39,1,Deal 40,Wing Day $0.89c Each,8.01,Tuesday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.553435,2025-01-01 17:37:24.551687,0.89,flat,NULL,fixed,8.01,NULL,0
+116,976,Deal 146,Wings & Whistle,9.00,Tuesday,Wings,,16:00:00,02:00:00,t,f,NULL,NULL,2024-12-31 05:24:49.634456,2024-12-31 22:41:22.938519,1.00,flat,NULL,fixed,9.00,NULL,0
+101,869,Deal 131,1/2 Price Wings,9.00,Thursday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:49.034075,2024-12-31 22:41:32.062481,1.00,flat,NULL,fixed,9.00,NULL,0
+51,859,Deal 52,2 For 1 Wings,9.00,Tuesday,Wings,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:47.016714,2025-01-01 16:22:01.892692,1.00,flat,NULL,fixed,9.00,NULL,0
+71,824,Deal 100,Wine Wednesday's $1 an oz,0.00,Wednesday,Drinks,Wine,11:00:00,00:00:00,t,f,NULL,NULL,2024-12-31 05:24:47.822042,2025-01-01 17:37:48.799006,NULL,flat,NULL,fixed,0.00,NULL,0
+2,855,Deal 2,Wing Night $.89,8.01,Wednesday,Wings,,16:00:00,00:00:00,t,f,NULL,NULL,2024-12-31 05:24:45.096016,2024-12-31 22:43:39.4358,0.89,flat,NULL,fixed,8.01,NULL,0
+100,869,Deal 130,1/2 Price Wine Bottles,0.00,Wednesday,Drinks,Wine,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.997191,2024-12-31 22:41:33.053717,NULL,flat,NULL,fixed,0.00,NULL,0
+165,858,Jumbo Chicken Wings,"Jumbo wings for $0.99 each (Minimum order of 6 wings, veggies & dip not included)",0.99,Tuesday,Wings,NULL,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,0.99,flat,Minimum order of 6 wings,fixed,0.99,NULL,0
+150,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Saturday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:00.926001,2025-01-05 16:57:28.441855,NULL,flat,NULL,fixed,5.95,NULL,0
+159,858,Late Night Wing Special,9pm to close every night. ,7.00,Thursday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.894321,2025-01-06 04:31:38.090501,0.7,flat,NULL,fixed,7.00,NULL,0
+151,870,Enjoy a TAP Beer for $5.95 Every Day !,"Every week, we’re offering one of our selected TAP beers on sale for just $5.95!
+Enjoy a refreshing 20 oz pint, available all day from 11 AM to 11 PM
+
+Stop by and take advantage of this unbeatable deal, with a new featured beer every week to keep things exciting! Cheers to great savings and even better brews!",5.95,Sunday,Beer,,11:00:00,23:00:00,t,f,NULL,NULL,2025-01-05 16:57:01.293589,2025-01-05 16:57:31.11864,NULL,flat,NULL,fixed,5.95,NULL,0
+154,854,Wing Night,Cheap wings on Thursdays!,1.20,Thursday,Wings,,NULL,NULL,t,f,NULL,NULL,2025-01-06 04:25:39.831441,2025-01-06 04:31:57.872557,1.2,flat,NULL,fixed,1.20,NULL,0
+36,399,Deal 36,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Sunday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.439758,2024-12-31 21:57:11.189298,NULL,flat,NULL,fixed,6.99,NULL,0
+173,858,Daily Pint Special,20 oz Domestic Pint,4.95,Monday,Beer,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,Available all day,fixed,4.95,NULL,0
+174,858,Daily Pint Special,20 oz Domestic Pint,4.95,Tuesday,Beer,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,Available all day,fixed,4.95,NULL,0
+175,858,Daily Pint Special,20 oz Domestic Pint,4.95,Wednesday,Beer,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,Available all day,fixed,4.95,NULL,0
+176,858,Daily Pint Special,20 oz Domestic Pint,4.95,Thursday,Beer,Drinks,NULL,NULL,f,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:25:36.640861,NULL,flat,Available all day,fixed,4.95,NULL,0
+168,858,Surf and Turf Night Lobser,8oz AAA Top Sirloin with 4oz Lobster Tail,27.00,Friday,Entrees,Seafood,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-06 22:27:39.372273,NULL,flat,Served with mashed potatoes and vegetables,fixed,27.00,NULL,0
+35,399,Deal 35,$6 Caesars 11:30am - 3pm,6.00,Sunday,Drinks,Caesar,11:30:00,15:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.401098,2024-12-31 21:57:13.421407,NULL,flat,NULL,fixed,6.00,NULL,0
+160,858,Late Night Wing Special,9pm to close every night. ,7.00,Friday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.900227,2025-01-06 04:31:34.317629,0.7,flat,NULL,fixed,7.00,NULL,0
+155,862,Cheap wings,Cheap wings Thursday nights. Must buy 2 lbs.,10.00,Thursday,Wings,,NULL,NULL,t,f,NULL,NULL,2025-01-06 04:26:36.409917,2025-01-06 04:31:54.19782,1,flat,NULL,fixed,10.00,NULL,0
+161,858,Late Night Wing Special,9pm to close every night. ,7.00,Wednesday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.900886,2025-01-06 04:31:30.478178,0.7,flat,NULL,fixed,7.00,NULL,0
+156,858,Late Night Wing Special,9pm to close every night. ,7.00,Monday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.871272,2025-01-06 04:31:50.464158,0.7,flat,NULL,fixed,7.00,NULL,0
+162,858,Late Night Wing Special,9pm to close every night. ,7.00,Sunday,Wings,,21:00:00,00:00:00,t,t,2025-01-13 19:43:40.16,NULL,2025-01-06 04:31:14.28449,2025-01-06 19:43:39.859925,0.7,flat,NULL,fixed,7.00,NULL,0
+95,679,Deal 124,Friday Breakfast Special - Bacon & Egg,10.99,Friday,Breakfast,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.791552,2024-12-31 22:41:37.87379,NULL,flat,NULL,fixed,10.99,NULL,0
+94,679,Deal 123,Thursday Lunch Special - Roast Beef,15.49,Thursday,Lunch,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.753658,2024-12-31 22:43:44.659654,NULL,flat,NULL,fixed,15.49,NULL,0
+88,679,Deal 117,Monday Lunch Special - Ham,15.49,Monday,Lunch,,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:48.514672,2024-12-31 22:43:53.702914,NULL,flat,NULL,fixed,15.49,NULL,0
+48,859,Deal 49,Classic Burger & Domestic Pint $22,22.00,Monday,Burgers,Drinks,NULL,NULL,t,f,NULL,NULL,2024-12-31 05:24:46.903193,2025-01-01 16:22:04.639541,NULL,flat,NULL,fixed,22.00,NULL,0
+34,399,Deal 34,$3.99 Kids Meals,3.99,Sunday,Kids,,17:00:00,20:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.362249,2025-01-01 17:37:27.868646,NULL,flat,NULL,fixed,3.99,NULL,0
+169,858,Surf and Turf Night Shrimp,8oz AAA Top Sirloin with 6 Chipotle Shrimps,22.00,Friday,Entrees,Seafood,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:13.239835,NULL,flat,Served with mashed potatoes and vegetables,fixed,22.00,NULL,0
+179,858,Daily Pint Special,20 oz Domestic Pint,4.95,Sunday,Beer,Drinks,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:18.384947,NULL,flat,Available all day,fixed,4.95,NULL,0
+178,858,Daily Pint Special,20 oz Domestic Pint,4.95,Saturday,Beer,Drinks,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:22.86801,NULL,flat,Available all day,fixed,4.95,NULL,0
+177,858,Daily Pint Special,20 oz Domestic Pint,4.95,Friday,Beer,Drinks,NULL,NULL,t,f,NULL,1,2025-01-06 22:25:36.640861,2025-01-07 06:13:27.791668,NULL,flat,Available all day,fixed,4.95,NULL,0
+28,399,Deal 28,"$6.99 Coors Light, Canadian & Miller Lite Pints till 5pm",6.99,Friday,Drinks,Beer,11:30:00,17:00:00,t,f,NULL,NULL,2024-12-31 05:24:46.12298,2025-01-01 17:37:33.736156,NULL,flat,NULL,fixed,6.99,NULL,0
+157,858,Late Night Wing Special,9pm to close every night. ,7.00,Tuesday,Wings,,21:00:00,00:00:00,t,f,NULL,NULL,2025-01-06 04:31:13.871659,2025-01-06 04:31:45.426425,0.7,flat,NULL,fixed,7.00,NULL,0
+141,856,Cheap wings,Wing night at the Black Bull ,8.01,Wednesday,Wings,,NULL,NULL,t,f,NULL,NULL,2025-01-05 14:11:56.223933,2025-01-07 04:39:19.672382,0.89,flat,NULL,fixed,8.01,NULL,0
+142,853,BOGO Wings,"On Wednesday's at Joe Dogs you can buy 1lb of wings and get 1lb free!
+
+Note* For the deal you must buy 2 orders",8.50,Wednesday,Wings,,NULL,NULL,t,f,NULL,NULL,2025-01-05 14:16:06.48112,2025-01-07 04:39:23.470692,0.94,flat,NULL,fixed,8.50,NULL,0

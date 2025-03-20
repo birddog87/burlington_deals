@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* Ensure Inter is included or change as needed */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom styles for shadows and focus */
+.card-shadow {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.input-shadow {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.focus-ring {
+  outline: 2px solid #2dd4bf; /* Teal focus ring */
+  outline-offset: 2px;
+}
+
+/* Style for listbox/options */
+.custom-listbox {
+  @apply absolute z-10 mt-1 w-full bg-gray-800 border border-gray-700 rounded-md shadow-lg overflow-auto max-h-60 focus:outline-none;
+}
+
+.custom-option {
+  @apply text-white cursor-pointer select-none relative py-2 pl-10 pr-4 hover:bg-teal-700 focus:bg-teal-700 active:bg-teal-800;
+}
+
+.custom-option.selected {
+  @apply bg-teal-900;
+}
+
+.custom-option.active {
+    @apply bg-teal-700;
+}
+
+.custom-option:focus {
+    @apply outline-none bg-teal-700;
+}
+
+.custom-option-indicator {
+  @apply absolute inset-y-0 left-0 ml-3 flex items-center;
+}
+
+/* Style for multi-select chips */
+.multi-select-chip {
+  @apply inline-flex items-center rounded-full bg-teal-500 px-2.5 py-0.5 text-xs font-medium text-white mr-2 mb-1;
+}
+
+.multi-select-chip-remove {
+  @apply ml-1 h-4 w-4 rounded-full hover:bg-teal-700 text-white cursor-pointer;
+}
+
+/* Style for Snackbar */
+.custom-snackbar {
+    @apply bg-gray-700 text-white rounded-md shadow-lg p-4;
+}
+
+.custom-snackbar-success {
+    @apply bg-teal-600;
+}
+
+.custom-snackbar-error {
+    @apply bg-red-600;
+}

@@ -1,0 +1,4 @@
+imported_restaurant_id,google_place_id,name,address,city,province,postal_code,phone,website,lat,lng,status,created_at,updated_at
+1,NULL,buttfuckers,42 buttfcuking lane,dundas,Ontario,NULL,NULL,NULL,NULL,NULL,pending,2025-01-05 19:54:07.217069,NULL
+2,NULL,fuckmybutt,42 ass street,whocares,New Brunswick,NULL,NULL,NULL,NULL,NULL,pending,2025-01-05 20:13:42.579804,NULL
+3,NULL,donkeyfuckers,31 jebida rd,toroto,Ontario,NULL,NULL,NULL,NULL,NULL,pending,2025-01-06 00:19:00.805981,NULL
