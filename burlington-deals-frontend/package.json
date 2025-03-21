@@ -19,6 +19,7 @@
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cra-template": "1.2.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.3",
     "dotenv": "^16.4.7",
@@ -38,13 +39,13 @@
     "yup": "^1.6.1"
   },
   "scripts": {
-    "start": "cross-env PORT=3001 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "tailwind:css": "tailwindcss -i ./src/tailwind.css -o ./src/index.css --watch",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && scp -P 18765 -r build/* u2849-ltl4m1dszx2y@ssh.burlingtondeals.ca:/home/customer/www/burlingtondeals.ca/public_html/"
   },
-  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -66,7 +67,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "autoprefixer": "^10.4.20",
-    "cross-env": "^7.0.3",
     "husky": "^9.1.7",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",

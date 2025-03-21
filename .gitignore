@@ -1,7 +1,21 @@
 node_modules/ 
 .env 
+*.env
+.env.*
 .DS_Store 
 build/ 
 dist/ 
 .vscode/ 
-*.log 
+*.log
+
+# Database backups and scripts
+backup-db.sh
+*.sql
+database/
+sqlbackups/
+
+# Scripts with credentials
+burlington-deals-api/scripts/GenerateHash.js
+
+# Local config
+*.local
