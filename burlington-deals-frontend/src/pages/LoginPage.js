@@ -51,7 +51,7 @@ const LoginPage = () => {
     >
       <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>
         <Typography variant="h5" gutterBottom>
-          Admin Login
+          Login
         </Typography>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}

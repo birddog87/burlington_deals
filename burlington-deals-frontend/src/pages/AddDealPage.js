@@ -1,5 +1,5 @@
 // src/pages/AddDealPage.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Paper,
@@ -24,6 +24,9 @@ import {
   Snackbar,
   Alert,
   Slide,
+  Divider,
+  useTheme,
+  alpha,
 } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -31,63 +34,40 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { createDeal } from '../services/dealService';
 import { searchRestaurants, createRestaurant } from '../services/restaurantService';
-// We won't redirect to homepage, so no need for useNavigate
-// import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import EventIcon from '@mui/icons-material/Event';
+import CategoryIcon from '@mui/icons-material/Category';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import DescriptionIcon from '@mui/icons-material/Description';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import RepeatIcon from '@mui/icons-material/Repeat';
 
 const DAYS_OF_WEEK = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday'
+  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
 ];
 
 const CATEGORIES = [
-  'Wings',
-  'Beer',
-  'Wine',
-  'Cocktails',
-  'Appetizers',
-  'Entrees',
-  'Desserts',
-  'Happy Hour',
-  'Tacos',
-  'Fish & Chips',
-  'Burgers',
-  'Pizza',
-  'Other'  // If "Other," show a custom text field
+  'Wings', 'Beer', 'Wine', 'Cocktails', 'Appetizers', 'Entrees', 
+  'Desserts', 'Happy Hour', 'Tacos', 'Fish & Chips', 'Burgers', 'Pizza', 'Other'
 ];
 
 const WINGS_PER_POUND = 10;
 
-// For the MUI multi-select style so text doesn't get cut off
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 7 + ITEM_PADDING_TOP,
-      width: 250,
-      backgroundColor: '#333', // Dark background for menu
-      color: '#fff',
-    },
-  },
-};
-
 function AddDealPage() {
-  // Instead of a single day, we store multiple days
+  const theme = useTheme();
+  
   const [formData, setFormData] = useState({
     restaurant_id: '',
     restaurant_name: '',
     title: '',
     description: '',
     price: '',
-    day_of_week: [],  // multiple days
+    day_of_week: [],
     category: '',
     second_category: '',
-    customCategory: '', // if they choose "Other"
+    customCategory: '',
     start_time: null,
     end_time: null,
     is_recurring: true,
@@ -97,30 +77,40 @@ function AddDealPage() {
   const [restaurantOptions, setRestaurantOptions] = useState([]);
   const [restaurantLoading, setRestaurantLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-
   const [loading, setLoading] = useState(false);
-
-  // Remove existing success and error message states
-  // const [successMessage, setSuccessMessage] = useState('');
-  // const [errorMessage, setErrorMessage] = useState('');
-
-  // Snackbar state variables
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'error', 'warning', 'info'
-
-  // For adding new restaurant if not found
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [showAddRestaurantDialog, setShowAddRestaurantDialog] = useState(false);
   const [newRestName, setNewRestName] = useState('');
   const [newRestCity, setNewRestCity] = useState('');
   const [newRestProvince, setNewRestProvince] = useState('');
   const [newRestAddress, setNewRestAddress] = useState('');
 
-  // =============== RESTAURANT SEARCH ===============
+  // Custom menu props for better dropdown styling
+  const customMenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 300,
+        width: 'auto',
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: '0px 5px 15px rgba(0,0,0,0.2)',
+        borderRadius: '8px',
+      },
+    },
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'left',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'left',
+    },
+  };
+
   const handleSearchRestaurants = async (e) => {
     const query = e.target.value;
     setSearchTerm(query);
-    // If < 2 chars, clear
     if (!query || query.length < 2) {
       setRestaurantOptions([]);
       return;
@@ -130,7 +120,6 @@ function AddDealPage() {
       const results = await searchRestaurants(query);
       setRestaurantOptions(results);
     } catch (err) {
-      console.error('Error searching restaurants:', err);
       showSnackbar('Failed to search restaurants. Please try again.', 'error');
     } finally {
       setRestaurantLoading(false);
@@ -149,7 +138,6 @@ function AddDealPage() {
 
   const handleCreateNewRestaurant = async () => {
     if (!newRestName || !newRestAddress || !newRestCity || !newRestProvince) {
-      // setErrorMessage('Please fill in all required fields.');
       showSnackbar('Please fill in all required fields.', 'error');
       return;
     }
@@ -166,21 +154,14 @@ function AddDealPage() {
       setNewRestCity('');
       setNewRestProvince('');
       setShowAddRestaurantDialog(false);
-
-      // Replace showSnackbar with setSuccessMessage
-      // setSuccessMessage('🎉 Thank you for submitting your restaurant! It will be reviewed and should be up in 24-48 hours.');
       showSnackbar('🎉 Thank you for submitting your restaurant! It will be reviewed and should be up in 24-48 hours.', 'success');
     } catch (err) {
-      console.error('Error creating new restaurant:', err);
-      // setErrorMessage('Failed to create new restaurant. Please try again.');
       showSnackbar('Failed to create new restaurant. Please try again.', 'error');
     }
   };
 
-  // =============== DAY MULTI-SELECTION ===============
   const handleDayChange = (event) => {
     const { value } = event.target;
-    // If the user selected "Every Day", fill all
     if (value.includes('Every Day')) {
       setFormData((prev) => ({
         ...prev,
@@ -194,7 +175,6 @@ function AddDealPage() {
     }));
   };
 
-  // =============== FORM LOGIC ===============
   const handleInputChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -209,18 +189,12 @@ function AddDealPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // setErrorMessage('');
-    // setSuccessMessage('');
-    // Clear any existing snackbars
-    // Optionally, you can show a loading snackbar if desired
 
-    // If category = "Other," use the customCategory
     let finalCategory = formData.category;
     if (finalCategory === 'Other') {
       finalCategory = formData.customCategory.trim() || 'Other';
     }
 
-    // If category = "Wings," handle price_per_wing
     let price_per_wing = null;
     if (formData.category === 'Wings') {
       if (formData.wing_price_unit === 'per_wing') {
@@ -230,9 +204,7 @@ function AddDealPage() {
       }
     }
 
-    // For multiple days, create multiple records
     if (!formData.day_of_week || formData.day_of_week.length === 0) {
-      // setErrorMessage('Please select at least one day of the week.');
       showSnackbar('Please select at least one day of the week.', 'error');
       setLoading(false);
       return;
@@ -251,9 +223,7 @@ function AddDealPage() {
       });
 
       await Promise.all(promises);
-
-      // setSuccessMessage('Deal(s) submitted successfully! You can add more deals if you’d like.');
-      showSnackbar('Deal(s) submitted successfully! You can add more deals if you’d like.', 'success');
+      showSnackbar('Deal(s) submitted successfully! You can add more deals if you\'d like.', 'success');
 
       setFormData((prev) => ({
         ...prev,
@@ -270,15 +240,12 @@ function AddDealPage() {
         wing_price_unit: 'per_wing'
       }));
     } catch (err) {
-      console.error(err);
-      // setErrorMessage('Failed to submit deal. Please try again.');
       showSnackbar('Failed to submit deal. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  // =============== Snackbar Functions ===============
   const showSnackbar = (message, severity = 'success') => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
@@ -286,80 +253,84 @@ function AddDealPage() {
   };
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+    if (reason === 'clickaway') return;
     setSnackbarOpen(false);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
-        sx={{
-          maxWidth: 600,
-          mx: 'auto',
-          mt: 3,
-          mb: 8,
-          px: 2,
-          width: '100%', // Mobile-friendly
-        }}
-      >
-        <Paper elevation={3} sx={{ p: 3, backgroundColor: 'background.paper' }}>
-          <Typography variant="h5" gutterBottom>
+      <Box sx={{ maxWidth: 800, mx: 'auto', my: 5, px: 2 }}>
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: 4, 
+            borderRadius: 2,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+          }}
+        >
+          <Typography variant="h4" gutterBottom sx={{ color: theme.palette.primary.main, fontWeight: 600 }}>
             Add a New Deal
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Fill out the details below. If your restaurant does not exist, click "Add New Restaurant."
-            If the deal runs multiple days, select them all below (with checkboxes) or choose "Every Day".
+          
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+            Fill out the details below. If your restaurant isn't in our database, click "Add New Restaurant."
+            For deals running on multiple days, select them all or choose "Every Day".
           </Typography>
 
-          {/* Removed existing Alert components */}
-          {/* {errorMessage && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {errorMessage}
-            </Alert>
-          )}
-          {successMessage && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              {successMessage}
-            </Alert>
-          )} */}
+          <Divider sx={{ mb: 4 }} />
 
-          <Box component="form" onSubmit={handleSubmit}>
-            {/* Restaurant Field (with search + add new) */}
-            <Typography variant="subtitle2" sx={{ mt: 2 }}>
-              Restaurant
-            </Typography>
-            <TextField
-              fullWidth
-              placeholder="Type to search or add restaurant..."
-              value={searchTerm}
-              onChange={handleSearchRestaurants}
-              margin="normal"
-              variant="outlined"
-            />
-            {restaurantLoading && <CircularProgress size={20} />}
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'grid', gap: 3 }}>
+            {/* Restaurant Section */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <RestaurantIcon color="primary" />
+              <Typography variant="h6">Restaurant</Typography>
+            </Box>
+            
+            <Box sx={{ position: 'relative' }}>
+              <TextField
+                fullWidth
+                label="Search for a restaurant"
+                placeholder="Type restaurant name..."
+                value={searchTerm}
+                onChange={handleSearchRestaurants}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: <SearchIcon color="action" sx={{ mr: 1 }} />,
+                  sx: { borderRadius: 1 }
+                }}
+              />
+              {restaurantLoading && (
+                <CircularProgress 
+                  size={24} 
+                  sx={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)' }} 
+                />
+              )}
+            </Box>
+
             {restaurantOptions.length > 0 && (
               <Paper
                 sx={{
-                  maxHeight: 150,
+                  maxHeight: 200,
                   overflow: 'auto',
-                  mb: 1,
-                  mt: 1,
-                  backgroundColor: '#333',
-                  color: '#fff',
+                  mt: 0,
+                  borderRadius: 1,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}
-                elevation={4}
               >
                 {restaurantOptions.map((r) => (
                   <Box
                     key={r.restaurant_id}
                     sx={{
-                      p: 1.5,
+                      p: 2,
                       cursor: 'pointer',
+                      borderBottom: `1px solid ${theme.palette.divider}`,
                       '&:hover': {
-                        backgroundColor: 'rgba(0, 150, 136, 0.2)',
+                        backgroundColor: alpha(theme.palette.primary.light, 0.1),
                       },
+                      '&:last-child': {
+                        borderBottom: 'none'
+                      }
                     }}
                     onClick={() => handleSelectRestaurant(r)}
                   >
@@ -368,16 +339,30 @@ function AddDealPage() {
                 ))}
               </Paper>
             )}
+
             <Button
               variant="outlined"
-              size="small"
-              sx={{ mb: 2 }}
+              size="medium"
+              startIcon={<AddCircleOutlineIcon />}
               onClick={() => setShowAddRestaurantDialog(true)}
+              sx={{ 
+                alignSelf: 'flex-start',
+                mb: 2,
+                borderRadius: 1.5,
+                px: 2
+              }}
             >
               Add New Restaurant
             </Button>
 
-            {/* Title */}
+            <Divider sx={{ my: 2 }} />
+
+            {/* Deal Details Section */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <DescriptionIcon color="primary" />
+              <Typography variant="h6">Deal Details</Typography>
+            </Box>
+
             <TextField
               label="Deal Title"
               name="title"
@@ -385,11 +370,10 @@ function AddDealPage() {
               required
               value={formData.title}
               onChange={handleInputChange}
-              margin="normal"
               variant="outlined"
+              sx={{ borderRadius: 1 }}
             />
 
-            {/* Description */}
             <TextField
               label="Description"
               name="description"
@@ -398,23 +382,56 @@ function AddDealPage() {
               rows={3}
               value={formData.description}
               onChange={handleInputChange}
-              margin="normal"
               variant="outlined"
+              placeholder="Describe the deal in detail..."
+              sx={{ borderRadius: 1 }}
             />
 
-            {/* Price */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <AttachMoneyIcon color="primary" />
+              <Typography variant="h6">Pricing</Typography>
+            </Box>
+
             <TextField
               label="Price"
               name="price"
               fullWidth
               value={formData.price}
               onChange={handleInputChange}
-              margin="normal"
               variant="outlined"
+              placeholder="Enter the deal price..."
+              sx={{ borderRadius: 1 }}
             />
 
-            {/* Day of Week (multi-select with checkboxes) */}
-            <FormControl fullWidth margin="normal" variant="outlined">
+            {formData.category === 'Wings' && (
+              <FormControl component="fieldset" sx={{ ml: 1 }}>
+                <RadioGroup
+                  row
+                  name="wing_price_unit"
+                  value={formData.wing_price_unit}
+                  onChange={handleInputChange}
+                >
+                  <FormControlLabel 
+                    value="per_wing" 
+                    control={<Radio color="primary" />} 
+                    label="Price per Wing" 
+                    sx={{ mr: 4 }}
+                  />
+                  <FormControlLabel 
+                    value="per_pound" 
+                    control={<Radio color="primary" />} 
+                    label="Price per Pound" 
+                  />
+                </RadioGroup>
+              </FormControl>
+            )}
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, mt: 2 }}>
+              <EventIcon color="primary" />
+              <Typography variant="h6">Schedule</Typography>
+            </Box>
+
+            <FormControl fullWidth variant="outlined">
               <InputLabel id="day-of-week-label">Day(s) of Week</InputLabel>
               <Select
                 labelId="day-of-week-label"
@@ -422,82 +439,46 @@ function AddDealPage() {
                 value={formData.day_of_week}
                 onChange={handleDayChange}
                 renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
+                MenuProps={customMenuProps}
                 label="Day(s) of Week"
               >
-                <MenuItem value="Every Day">
-                  <Checkbox checked={formData.day_of_week.length === DAYS_OF_WEEK.length} />
-                  <ListItemText primary="Every Day" />
+                <MenuItem 
+                  value="Every Day"
+                  sx={{
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    py: 1.5
+                  }}
+                >
+                  <Checkbox 
+                    checked={formData.day_of_week.length === DAYS_OF_WEEK.length} 
+                    sx={{ 
+                      color: theme.palette.primary.main,
+                      '&.Mui-checked': {
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  />
+                  <ListItemText primary={<Typography fontWeight="medium">Every Day</Typography>} />
                 </MenuItem>
+                
                 {DAYS_OF_WEEK.map((day) => (
-                  <MenuItem key={day} value={day}>
-                    <Checkbox checked={formData.day_of_week.indexOf(day) > -1} />
+                  <MenuItem key={day} value={day} sx={{ py: 1.2 }}>
+                    <Checkbox 
+                      checked={formData.day_of_week.indexOf(day) > -1} 
+                      sx={{ 
+                        color: theme.palette.primary.main,
+                        '&.Mui-checked': {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    />
                     <ListItemText primary={day} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
-            {/* Category */}
-            <FormControl fullWidth margin="normal" variant="outlined">
-              <InputLabel id="category-label">Primary Category</InputLabel>
-              <Select
-                labelId="category-label"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                MenuProps={MenuProps}
-                label="Primary Category"
-              >
-                {CATEGORIES.map((cat) => (
-                  <MenuItem key={cat} value={cat}>
-                    {cat}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* If "Other," ask for custom category name */}
-            {formData.category === 'Other' && (
-              <TextField
-                label="Custom Category"
-                name="customCategory"
-                fullWidth
-                value={formData.customCategory}
-                onChange={handleInputChange}
-                margin="normal"
-                variant="outlined"
-              />
-            )}
-
-            {/* Secondary Category */}
-            <TextField
-              label="Secondary Category"
-              name="second_category"
-              fullWidth
-              value={formData.second_category}
-              onChange={handleInputChange}
-              margin="normal"
-              variant="outlined"
-            />
-
-            {/* If Wings, show the price-per-wing vs per-pound radio */}
-            {formData.category === 'Wings' && (
-              <FormControl component="fieldset" margin="normal">
-                <RadioGroup
-                  row
-                  name="wing_price_unit"
-                  value={formData.wing_price_unit}
-                  onChange={handleInputChange}
-                >
-                  <FormControlLabel value="per_wing" control={<Radio />} label="Price per Wing" />
-                  <FormControlLabel value="per_pound" control={<Radio />} label="Price per Pound" />
-                </RadioGroup>
-              </FormControl>
-            )}
-
-            {/* Start & End Times */}
-            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <Box sx={{ display: 'flex', gap: 2 }}>
               <TimePicker
                 label="Start Time"
                 value={formData.start_time ? dayjs(formData.start_time, 'HH:mm:ss') : null}
@@ -506,6 +487,7 @@ function AddDealPage() {
                   textField: {
                     variant: 'outlined',
                     fullWidth: true,
+                    sx: { borderRadius: 1 }
                   },
                 }}
               />
@@ -517,31 +499,90 @@ function AddDealPage() {
                   textField: {
                     variant: 'outlined',
                     fullWidth: true,
+                    sx: { borderRadius: 1 }
                   },
                 }}
               />
             </Box>
 
-            {/* Recurring? */}
             <FormControlLabel
               control={
                 <Switch
                   checked={formData.is_recurring}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, is_recurring: e.target.checked }))
-                  }
+                  onChange={(e) => setFormData((prev) => ({ ...prev, is_recurring: e.target.checked }))}
+                  color="primary"
                 />
               }
-              label="This is a recurring deal"
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <RepeatIcon fontSize="small" color="action" />
+                  <Typography>This is a recurring deal</Typography>
+                </Box>
+              }
             />
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, mt: 2 }}>
+              <CategoryIcon color="primary" />
+              <Typography variant="h6">Categorization</Typography>
+            </Box>
+
+            <FormControl fullWidth variant="outlined">
+              <InputLabel id="category-label">Primary Category</InputLabel>
+              <Select
+                labelId="category-label"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                MenuProps={customMenuProps}
+                label="Primary Category"
+              >
+                {CATEGORIES.map((cat) => (
+                  <MenuItem key={cat} value={cat} sx={{ py: 1.2 }}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {formData.category === 'Other' && (
+              <TextField
+                label="Custom Category"
+                name="customCategory"
+                fullWidth
+                value={formData.customCategory}
+                onChange={handleInputChange}
+                variant="outlined"
+                placeholder="Enter your custom category..."
+                sx={{ borderRadius: 1 }}
+              />
+            )}
+
+            <TextField
+              label="Secondary Category (Optional)"
+              name="second_category"
+              fullWidth
+              value={formData.second_category}
+              onChange={handleInputChange}
+              variant="outlined"
+              placeholder="Optional additional category..."
+              sx={{ borderRadius: 1 }}
+            />
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 disabled={loading}
                 startIcon={loading && <CircularProgress size="1rem" color="inherit" />}
+                sx={{ 
+                  py: 1.5, 
+                  px: 5, 
+                  borderRadius: 1.5,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  fontSize: '1rem',
+                  fontWeight: 'medium'
+                }}
               >
                 {loading ? 'Submitting...' : 'Submit Deal'}
               </Button>
@@ -551,9 +592,25 @@ function AddDealPage() {
       </Box>
 
       {/* Dialog to add a new restaurant */}
-      <Dialog open={showAddRestaurantDialog} onClose={() => setShowAddRestaurantDialog(false)}>
-        <DialogTitle>Add a New Restaurant</DialogTitle>
-        <DialogContent>
+      <Dialog 
+        open={showAddRestaurantDialog} 
+        onClose={() => setShowAddRestaurantDialog(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          fontSize: '1.5rem', 
+          fontWeight: 600, 
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          pb: 2
+        }}>
+          Add a New Restaurant
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3, px: 3, pb: 1 }}>
           <TextField
             label="Restaurant Name"
             fullWidth
@@ -561,6 +618,7 @@ function AddDealPage() {
             variant="outlined"
             value={newRestName}
             onChange={(e) => setNewRestName(e.target.value)}
+            sx={{ mb: 2 }}
           />
           <TextField
             label="Address"
@@ -569,6 +627,7 @@ function AddDealPage() {
             variant="outlined"
             value={newRestAddress}
             onChange={(e) => setNewRestAddress(e.target.value)}
+            sx={{ mb: 2 }}
           />
           <TextField
             label="City"
@@ -577,41 +636,45 @@ function AddDealPage() {
             variant="outlined"
             value={newRestCity}
             onChange={(e) => setNewRestCity(e.target.value)}
+            sx={{ mb: 2 }}
           />
-          <FormControl fullWidth margin="normal" variant="outlined">
+          <FormControl fullWidth margin="normal" variant="outlined" sx={{ mb: 2 }}>
             <InputLabel id="province-label">Province</InputLabel>
             <Select
               labelId="province-label"
               value={newRestProvince}
               onChange={(e) => setNewRestProvince(e.target.value)}
               label="Province"
+              MenuProps={customMenuProps}
             >
               {[
-                'Alberta',
-                'British Columbia',
-                'Manitoba',
-                'New Brunswick',
-                'Newfoundland and Labrador',
-                'Nova Scotia',
-                'Ontario',
-                'Prince Edward Island',
-                'Quebec',
-                'Saskatchewan',
-                'Northwest Territories',
-                'Nunavut',
-                'Yukon'
+                'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick',
+                'Newfoundland and Labrador', 'Nova Scotia', 'Ontario',
+                'Prince Edward Island', 'Quebec', 'Saskatchewan',
+                'Northwest Territories', 'Nunavut', 'Yukon'
               ].map((province) => (
-                <MenuItem key={province} value={province}>
+                <MenuItem key={province} value={province} sx={{ py: 1.2 }}>
                   {province}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowAddRestaurantDialog(false)}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={handleCreateNewRestaurant}>
-            Save
+        <DialogActions sx={{ px: 3, pb: 3, pt: 1 }}>
+          <Button 
+            onClick={() => setShowAddRestaurantDialog(false)}
+            variant="outlined"
+            sx={{ borderRadius: 1.5, px: 3 }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleCreateNewRestaurant}
+            sx={{ borderRadius: 1.5, px: 3 }}
+          >
+            Save Restaurant
           </Button>
         </DialogActions>
       </Dialog>
@@ -624,7 +687,16 @@ function AddDealPage() {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         TransitionComponent={Slide}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbarSeverity} 
+          variant="filled"
+          sx={{ 
+            width: '100%',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            borderRadius: 1.5
+          }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>

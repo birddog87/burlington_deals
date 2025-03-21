@@ -1,8 +1,6 @@
-// src/components/Footer.js
-
 import React from 'react';
 import { Box, Typography, Link, IconButton } from '@mui/material';
-import { GitHub, LinkedIn, Twitter } from '@mui/icons-material';
+import { LinkedIn } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 const Footer = () => {
@@ -52,16 +50,10 @@ const Footer = () => {
           </Link>
         </Box>
 
-        {/* Social Media Icons */}
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton href="https://github.com/yourprofile" target="_blank" rel="noopener" aria-label="GitHub">
-            <GitHub />
-          </IconButton>
-          <IconButton href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener" aria-label="LinkedIn">
+        {/* LinkedIn Icon Only */}
+        <Box>
+          <IconButton href="https://www.linkedin.com/in/nicholashammond07/" target="_blank" rel="noopener" aria-label="LinkedIn">
             <LinkedIn />
-          </IconButton>
-          <IconButton href="https://twitter.com/yourprofile" target="_blank" rel="noopener" aria-label="Twitter">
-            <Twitter />
           </IconButton>
         </Box>
       </Box>

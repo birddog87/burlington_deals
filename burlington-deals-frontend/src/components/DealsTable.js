@@ -114,7 +114,7 @@ const ReportDealModal = ({ open, onClose, deal }) => {
 };
 
 // =========== SingleDealCard =============
-const SingleDealCard = ({ deal }) => {
+  const SingleDealCard = ({ deal, onReportClick }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showPerPound, setShowPerPound] = useState(false);
@@ -148,8 +148,13 @@ const SingleDealCard = ({ deal }) => {
 
   // Address + map link
   const googleMapsUrl = deal.place_id
-    ? `https://www.google.com/maps/search/?api=1&query_place_id=${deal.place_id}`
-    : null;
+  ? `https://www.google.com/maps/search/?api=1&query_place_id=${deal.place_id}`
+  : deal.geometry_location_lat && deal.geometry_location_lng
+    ? `https://www.google.com/maps/search/?api=1&query=${deal.geometry_location_lat},${deal.geometry_location_lng}`
+    : deal.address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(deal.address)}`
+      : null;
+
 
   // Description
   const FULL_DESC = deal.description || '';
@@ -293,7 +298,7 @@ const SingleDealCard = ({ deal }) => {
       {/* "Report Deal" at the bottom, no absolute positioning */}
       <Box sx={{ mt: 1, textAlign: 'right' }}>
         <Tooltip title="Found something wrong with this deal? Click to report.">
-          <Button variant="outlined" color="error" size="small" >
+          <Button variant="outlined" color="error" size="small" onClick={onReportClick} >
             {/* Parent will handle the onClick -> see DealsTable below */}
             Report Deal
           </Button>
@@ -303,11 +308,28 @@ const SingleDealCard = ({ deal }) => {
   );
 };
 
+// Function to get current day of week
+const getCurrentDayOfWeek = () => {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const today = new Date();
+  return days[today.getDay()];
+};
+
+// Fisher-Yates shuffle algorithm for randomizing array order
+const shuffleArray = (array) => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // Swap elements
+  }
+  return newArray;
+};
+
 // =========== DealsTable =============
 const DealsTable = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const [currentDay] = useState(getCurrentDayOfWeek());
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -333,6 +355,8 @@ const DealsTable = () => {
       setLoading(true);
       try {
         const data = await getApprovedDeals();
+        
+        // Store the deals without sorting them yet
         setDeals(data || []);
       } catch (err) {
         console.error('Error fetching deals:', err);
@@ -360,8 +384,9 @@ const DealsTable = () => {
     setPage(1);
   };
 
-  const filteredDeals = deals
-    .filter((deal) => {
+  const filteredDeals = React.useMemo(() => {
+    // First apply all filters like before
+    const filtered = deals.filter((deal) => {
       const lower = searchTerm.toLowerCase();
       const matchSearch =
         !searchTerm ||
@@ -374,14 +399,31 @@ const DealsTable = () => {
         filters.restaurant === 'all' ||
         (deal.restaurant_name?.toLowerCase() === filters.restaurant.toLowerCase());
 
+      // If a specific day is selected, use that, otherwise accept all days
       const matchDay = filters.day === 'all' || deal.day_of_week === filters.day;
       const matchCat = filters.category === 'all' || deal.category === filters.category;
       const matchType = filters.deal_type === 'all' || deal.deal_type === filters.deal_type;
 
       return matchSearch && matchRest && matchDay && matchCat && matchType;
-    })
-    // sort newest
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    });
+
+    // Check if we're in "All Days" mode and should prioritize current day
+    if (filters.day === 'all') {
+      // Split deals into current day and other days
+      const currentDayDeals = filtered.filter(deal => deal.day_of_week === currentDay);
+      const otherDayDeals = filtered.filter(deal => deal.day_of_week !== currentDay);
+      
+      // Shuffle each group separately to randomize order
+      const shuffledCurrentDay = shuffleArray(currentDayDeals);
+      const shuffledOtherDays = shuffleArray(otherDayDeals);
+      
+      // Return current day deals first, then other days
+      return [...shuffledCurrentDay, ...shuffledOtherDays];
+    } else {
+      // If a specific day is selected, just shuffle all matching deals
+      return shuffleArray(filtered);
+    }
+  }, [deals, filters, searchTerm, currentDay]);
 
   const pageCount = Math.ceil(filteredDeals.length / itemsPerPage);
   const paginatedDeals = filteredDeals.slice((page - 1) * itemsPerPage, page * itemsPerPage);
@@ -504,8 +546,10 @@ const DealsTable = () => {
       ) : (
         paginatedDeals.map((deal) => (
           <Box key={deal.deal_id}>
-            {/* Render a SingleDealCard */}
-            <SingleDealCard deal={deal} />
+            <SingleDealCard 
+              deal={deal} 
+              onReportClick={() => handleOpenReport(deal)} 
+            />
           </Box>
         ))
       )}
