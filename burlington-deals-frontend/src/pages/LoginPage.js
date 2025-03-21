@@ -11,9 +11,9 @@ import {
   CircularProgress,
   Link
 } from '@mui/material';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import API from '../services/api'; // Use the configured Axios instance
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
@@ -29,7 +29,7 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await API.post('/auth/login', { email, password });
       const { token } = response.data;
       login(token);
       navigate('/');

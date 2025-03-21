@@ -1,5 +1,6 @@
 {
   "name": "burlington-deals-frontend",
+  "homepage": "https://burlingtondeals.ca",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

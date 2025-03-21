@@ -9,12 +9,12 @@ import {
   Alert, 
   CircularProgress 
 } from '@mui/material';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // Ensure AuthContext is correctly imported
+import { AuthContext } from '../context/AuthContext';
+import API from '../services/api'; // ✅ use the configured Axios instance
 
 const RegisterPage = () => {
-  const { login } = useContext(AuthContext); // Access login from context
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,7 +28,6 @@ const RegisterPage = () => {
     setLoading(true);
     setError('');
 
-    // Basic validation
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       setLoading(false);
@@ -36,10 +35,15 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/auth/register', { email, password, display_name: displayName }); // Relative path if proxy is set
+      const response = await API.post('/auth/register', {
+        email,
+        password,
+        display_name: displayName
+      });
+
       const { token } = response.data;
-      login(token); // Update context
-      navigate('/'); // Redirect to home page after successful registration
+      login(token);
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed. Please try again.');
     } finally {

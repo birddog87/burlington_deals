@@ -1,10 +1,11 @@
 // src/services/authService.js
-import API from './api'; // Axios instance with baseURL
+import API from './api';
 
-// Login User
+const AUTH_API_URL = '/auth'; // Relative path like dealService uses
+
 export const loginUser = async (email, password) => {
   try {
-    const response = await API.post('/auth/login', { email, password });
+    const response = await API.post(`${AUTH_API_URL}/login`, { email, password });
     return response.data;
   } catch (error) {
     console.error('Login Error:', error);
@@ -12,10 +13,9 @@ export const loginUser = async (email, password) => {
   }
 };
 
-// Register User
 export const registerUser = async (email, password, displayName) => {
   try {
-    const response = await API.post('/auth/register', { email, password, display_name: displayName });
+    const response = await API.post(`${AUTH_API_URL}/register`, { email, password, display_name: displayName });
     return response.data;
   } catch (error) {
     console.error('Registration Error:', error);
@@ -23,10 +23,9 @@ export const registerUser = async (email, password, displayName) => {
   }
 };
 
-// Forgot Password
 export const forgotPassword = async (email) => {
   try {
-    const response = await API.post('/auth/forgot', { email });
+    const response = await API.post(`${AUTH_API_URL}/forgot`, { email });
     return response.data;
   } catch (error) {
     console.error('Forgot Password Error:', error);
@@ -34,10 +33,9 @@ export const forgotPassword = async (email) => {
   }
 };
 
-// Reset Password
 export const resetPassword = async (token, newPassword) => {
   try {
-    const response = await API.post('/auth/reset', { token, newPassword });
+    const response = await API.post(`${AUTH_API_URL}/reset`, { token, newPassword });
     return response.data;
   } catch (error) {
     console.error('Reset Password Error:', error);

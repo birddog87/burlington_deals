@@ -9,7 +9,7 @@ import {
   Alert,
   CircularProgress
 } from '@mui/material';
-import axios from 'axios';
+import API from '../services/api'; // ✅ Use the configured Axios instance
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/forgot', { email });
+      const response = await API.post('/auth/forgot', { email });
       setMsg(response.data.message || 'If that email exists, a reset link was sent.');
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong.');
