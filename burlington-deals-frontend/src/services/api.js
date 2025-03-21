@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://burlington-deals-api-e657ab9d4b71.herokuapp.com/api', // Your Heroku backend URL
+  baseURL: 'https://burlington-deals-api.onrender.com', // Your Render backend URL
 });
 
 // Add a request interceptor to include the token if it exists
