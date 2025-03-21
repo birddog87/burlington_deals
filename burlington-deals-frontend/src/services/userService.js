@@ -22,5 +22,3 @@ export const updateUser = async (userId, updatedData) => {
     throw error;
   }
 };
-
-// Additional user-related API calls can be added here
