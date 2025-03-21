@@ -1,9 +1,8 @@
 // src/services/restaurantService.js
-import API from './api'; // The Axios instance with baseURL
+import API from './api'; // Axios instance with baseURL
 
-const RESTAURANT_API_URL = '/restaurants'; // Adjust if needed
+const RESTAURANT_API_URL = '/restaurants';
 
-// Fetch all restaurants (admin or otherwise)
 export const getAllRestaurants = async () => {
   try {
     const response = await API.get(`${RESTAURANT_API_URL}/`);
@@ -14,7 +13,6 @@ export const getAllRestaurants = async () => {
   }
 };
 
-// Search restaurants (if you have /search endpoint)
 export const searchRestaurants = async (query) => {
   try {
     const response = await API.get(`${RESTAURANT_API_URL}/search`, {
@@ -27,7 +25,6 @@ export const searchRestaurants = async (query) => {
   }
 };
 
-// CREATE a new restaurant
 export const createRestaurant = async ({ name, address, city, province }) => {
   try {
     const response = await API.post(`${RESTAURANT_API_URL}`, {

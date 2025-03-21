@@ -1,9 +1,8 @@
 // src/services/userService.js
 import API from './api'; // Axios instance with baseURL and interceptors
 
-const USER_API_URL = '/admin/users'; // Assuming the backend route is /api/admin/users
+const USER_API_URL = '/admin/users';
 
-// Fetch all users
 export const getAllUsers = async () => {
   try {
     const response = await API.get(`${USER_API_URL}/`);
@@ -14,7 +13,6 @@ export const getAllUsers = async () => {
   }
 };
 
-// Update a user
 export const updateUser = async (userId, updatedData) => {
   try {
     const response = await API.put(`${USER_API_URL}/${userId}`, updatedData);
