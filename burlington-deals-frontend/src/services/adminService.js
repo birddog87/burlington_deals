@@ -17,6 +17,7 @@ export const getAllUsers = async () => {
 // Update user role (admin only)
 export const updateUserRole = async (userId, newRole) => {
   try {
+    console.log('Updating user role:', userId, 'to', newRole);
     const response = await API.put(`${ADMIN_API_URL}/users/${userId}/role`, { role: newRole });
     return response.data;
   } catch (error) {
@@ -24,6 +25,7 @@ export const updateUserRole = async (userId, newRole) => {
     throw error;
   }
 };
+
 
 // Toggle user active status (admin only)
 export const toggleUserActive = async (userId) => {

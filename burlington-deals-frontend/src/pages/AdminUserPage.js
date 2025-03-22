@@ -90,7 +90,14 @@ const AdminUserPage = () => {
     setError('');
     setSuccess('');
     try {
-      await updateUserRole(selectedUser.user_id, values);
+      // Fix: Just pass the role string, not the entire values object
+      await updateUserRole(selectedUser.user_id, values.role);
+      
+      // Update active status separately if needed
+      if (values.is_active !== selectedUser.is_active) {
+        await toggleUserActive(selectedUser.user_id);
+      }
+      
       setSuccess('User updated successfully.');
       fetchUsers();
       setSelectedUser(null);
