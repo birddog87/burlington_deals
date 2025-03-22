@@ -305,7 +305,10 @@ const ContactUsPage = () => {
               <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
                 <ReCAPTCHA
                   sitekey={RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setFieldValue('recaptchaToken', token)}
+                  onChange={(token) => {
+                    console.log('reCAPTCHA token:', token); // Log the token for debugging
+                    setFieldValue('recaptchaToken', token);
+                  }}
                 />
                 {touched.recaptchaToken && errors.recaptchaToken && (
                   <Typography variant="caption" color="error" sx={{ mt: 1 }}>

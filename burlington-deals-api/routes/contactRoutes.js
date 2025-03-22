@@ -25,15 +25,35 @@ const contactLimiter = rateLimit({
 async function verifyRecaptcha(token) {
   try {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    
+    // Use axios to post to the verification endpoint
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`
+      'https://www.google.com/recaptcha/api/siteverify',
+      null,
+      {
+        params: {
+          secret: secretKey,
+          response: token
+        }
+      }
     );
-    return response.data.success;
+    
+    console.log('reCAPTCHA response:', response.data); // Log the response for debugging
+    
+    // Check if the verification was successful
+    if (response.data.success) {
+      return true;
+    } else {
+      console.error('reCAPTCHA verification failed:', response.data['error-codes']);
+      return false;
+    }
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
     return false;
   }
 }
+
+
 
 /**
  * POST /api/contact
