@@ -17,6 +17,7 @@ import TermsAndConditions from './pages/TermsAndConditions'; // Assuming you've 
 import Footer from './components/Footer'; // We'll create this next
 import ContactUsPage from './pages/ContactUsPage'; // Import the Contact Us Page
 import RegisterPage from './pages/RegisterPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 // Lazy load AdminUserPage
 const AdminUserPage = lazy(() => import('./pages/AdminUserPage'));
 // Create a custom theme
@@ -209,6 +210,7 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/contact-us" element={<ContactUsPage />} />

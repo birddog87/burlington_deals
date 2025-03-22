@@ -50,27 +50,91 @@ router.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+    
+    // Set user as inactive until verified
     const newUser = await pool.query(
-      `INSERT INTO users (email, password_hash, display_name, created_at, role)
-       VALUES ($1, $2, $3, NOW(), $4)
+      `INSERT INTO users (email, password_hash, display_name, created_at, role, is_active, verification_token)
+       VALUES ($1, $2, $3, NOW(), $4, $5, $6)
        RETURNING user_id, email, role`,
-      [email, hashedPassword, display_name, 'user']
+      [email, hashedPassword, display_name, 'user', false, hashedToken]
     );
+    
+    // Create verification link
+    const verificationLink = `${process.env.FRONTEND_URL || 'https://burlingtondeals.ca'}/verify-email?token=${verificationToken}`;
+    
+    // Send verification email
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    const msg = {
+      to: email,
+      from: process.env.SENDGRID_FROM_EMAIL,
+      subject: 'Verify Your Email - Burlington Deals',
+      text: `Thank you for registering! Please verify your email by clicking this link: ${verificationLink}`,
+      html: `
+        <h2>Welcome to Burlington Deals!</h2>
+        <p>Thank you for registering an account. To activate your account, please click the button below:</p>
+        <p>
+          <a href="${verificationLink}" style="background-color: #6B46C1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Verify Email Address</a>
+        </p>
+        <p>Or copy and paste this link in your browser:</p>
+        <p>${verificationLink}</p>
+        <p>This link will expire in 24 hours.</p>
+      `,
+    };
+    
+    await sgMail.send(msg);
 
-    const token = jwt.sign(
-      {
-        user_id: newUser.rows[0].user_id,
-        email: newUser.rows[0].email,
-        role: newUser.rows[0].role,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.status(201).json({ token });
+    // Return success without a token - user needs to verify first
+    res.status(201).json({ 
+      message: 'Registration successful! Please check your email to verify your account.',
+      requiresVerification: true
+    });
   } catch (err) {
     console.error('Registration Error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+/**
+ * GET /api/auth/verify
+ * Verifies a user's email
+ */
+router.get('/verify', async (req, res) => {
+  const { token } = req.query;
+  if (!token) {
+    return res.status(400).json({ error: 'Verification token is required.' });
+  }
+
+  try {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const userResult = await pool.query(
+      'SELECT * FROM users WHERE verification_token = $1',
+      [hashedToken]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid verification token.' });
+    }
+
+    const user = userResult.rows[0];
+    
+    // Activate the user's account
+    await pool.query(
+      'UPDATE users SET is_active = TRUE, verification_token = NULL WHERE user_id = $1',
+      [user.user_id]
+    );
+
+    // Return success message
+    res.status(200).json({ 
+      message: 'Email verified successfully! You can now log in to your account.' 
+    });
+  } catch (err) {
+    console.error('Email Verification Error:', err);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
@@ -95,6 +159,14 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid email or password.' });
+    }
+
+    // Check if the user's account is verified/active
+    if (!user.is_active) {
+      return res.status(400).json({ 
+        error: 'Your account has not been verified.',
+        requiresVerification: true
+      });
     }
 
     const token = jwt.sign(

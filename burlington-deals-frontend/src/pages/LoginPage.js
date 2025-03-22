@@ -23,22 +23,31 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
 
-    try {
-      const response = await API.post('/auth/login', { email, password });
-      const { token } = response.data;
-      login(token);
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
-    } finally {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+
+  try {
+    const response = await API.post('/auth/login', { email, password });
+    
+    // Check if the user's account is active
+    if (response.data.requiresVerification) {
+      setError('Please verify your email address before logging in. Check your inbox.');
       setLoading(false);
+      return;
     }
-  };
+    
+    const { token } = response.data;
+    login(token);
+    navigate('/');
+  } catch (err) {
+    setError(err.response?.data?.error || 'Login failed. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Box 
