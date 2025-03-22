@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000; // Fallback to 5000 for local development
 
 // Configure CORS
 app.use(cors({
-  origin: 'https://burlingtondeals.ca', 
+  origin: ['https://burlingtondeals.ca', 'http://192.168.1.121:3000', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
