@@ -127,7 +127,8 @@ router.post('/forgot', async (req, res) => {
   try {
     const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
-      return res.status(404).json({ error: 'User not found.' });
+      // For security, don't reveal if email exists
+      return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
     }
 
     const user = userResult.rows[0];
@@ -135,14 +136,48 @@ router.post('/forgot', async (req, res) => {
     const hashedToken = crypto.createHash('sha256').update(plainToken).digest('hex');
     const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
 
+    // Clear any existing tokens for this user
+    await pool.query('DELETE FROM password_resets WHERE user_id = $1', [user.user_id]);
+    
+    // Add new token
     await pool.query(
       `INSERT INTO password_resets (user_id, token, expires_at, created_at)
        VALUES ($1, $2, $3, NOW())`,
       [user.user_id, hashedToken, expiresAt]
     );
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${plainToken}`;
-    await sendResetEmail(user.email, resetLink);
+    const resetLink = `${process.env.FRONTEND_URL || 'https://burlingtondeals.ca'}/reset-password?token=${plainToken}`;
+    
+    // Use SendGrid instead of nodemailer
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    const msg = {
+      to: user.email,
+      from: process.env.SENDGRID_FROM_EMAIL, // Must be verified in SendGrid
+      subject: 'Password Reset Request - Burlington Deals',
+      text: `You requested a password reset. Click the link below to reset your password:
+
+${resetLink}
+
+If you did not request this, please ignore this email.
+
+This link will expire in 1 hour.`,
+      html: `
+        <h2>Password Reset Request</h2>
+        <p>You requested a password reset for your Burlington Deals account.</p>
+        <p>Click the button below to reset your password:</p>
+        <p>
+          <a href="${resetLink}" style="background-color: #6B46C1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+        </p>
+        <p>Or copy and paste this link in your browser:</p>
+        <p>${resetLink}</p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>This link will expire in 1 hour.</p>
+      `,
+    };
+
+    await sgMail.send(msg);
 
     res.status(200).json({ message: 'Password reset email sent.' });
   } catch (err) {
