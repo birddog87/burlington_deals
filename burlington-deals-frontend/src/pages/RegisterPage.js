@@ -27,6 +27,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(''); // Add this state for success messages
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordFeedback, setPasswordFeedback] = useState('');
@@ -75,6 +76,7 @@ const RegisterPage = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess(''); // Clear any previous success messages
 
     // Validate passwords
     if (password !== confirmPassword) {
@@ -90,16 +92,31 @@ const RegisterPage = () => {
     }
 
     try {
+      console.log("Sending registration request...");
       const response = await API.post('/auth/register', {
         email,
         password,
         display_name: displayName
       });
-
-      const { token } = response.data;
-      login(token);
-      navigate('/');
+      
+      console.log("Registration response:", response.data);
+      
+      // Check if the response indicates email verification is required
+      if (response.data.requiresVerification) {
+        setSuccess(response.data.message || 'Registration successful! Please check your email to verify your account.');
+        
+        // Clear the form
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setDisplayName('');
+      } else if (response.data.token) {
+        // For backward compatibility or if verification is not required
+        login(response.data.token);
+        navigate('/');
+      }
     } catch (err) {
+      console.error("Registration error:", err);
       setError(err.response?.data?.error || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
@@ -124,6 +141,7 @@ const RegisterPage = () => {
         <Divider sx={{ mb: 3 }} />
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
