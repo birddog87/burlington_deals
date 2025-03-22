@@ -1,10 +1,11 @@
+// authRoutes.js
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer'); // Moved email logic directly here for simplicity
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 /**
@@ -20,14 +21,51 @@ const sendResetEmail = async (email, resetLink) => {
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: {
+      name: "Burlington Deals",
+      address: process.env.EMAIL_USER
+    },
     to: email,
-    subject: 'Password Reset Request',
-    text: `You requested a password reset. Click the link below to reset your password:
+    subject: 'Reset Your Burlington Deals Password',
+    text: `Hello,
+
+You recently requested to reset your password for your Burlington Deals account. Click the link below to reset your password:
 
 ${resetLink}
 
-If you did not request this, please ignore this email.`,
+This password reset link will expire in 1 hour.
+
+If you did not request a password reset, please ignore this email and your password will remain unchanged.
+
+Best regards,
+The Burlington Deals Team
+https://burlingtondeals.ca
+
+This is an automated message. Please do not reply directly to this email.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="padding: 20px; background-color: #6B46C1; text-align: center;">
+          <h1 style="color: white; margin: 0;">Burlington Deals</h1>
+        </div>
+        <div style="padding: 30px; border: 1px solid #e0e0e0; border-top: none; background-color: #ffffff;">
+          <h2 style="color: #333333; margin-top: 0;">Password Reset Request</h2>
+          <p style="color: #555555; line-height: 1.5;">Hello,</p>
+          <p style="color: #555555; line-height: 1.5;">You recently requested to reset your password for your Burlington Deals account. Please click the button below to reset your password:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" style="background-color: #6B46C1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Reset My Password</a>
+          </div>
+          <p style="color: #555555; line-height: 1.5;">Or copy and paste this link in your browser:</p>
+          <div style="background-color: #f5f5f5; padding: 12px; border-radius: 4px;">
+            <a href="${resetLink}" style="color: #6B46C1; word-break: break-all; font-size: 14px; text-decoration: none;">${resetLink}</a>
+          </div>
+          <p style="color: #555555; line-height: 1.5; margin-top: 25px;">This password reset link will expire in 1 hour.</p>
+          <p style="color: #555555; line-height: 1.5;">If you did not request a password reset, please ignore this email and your password will remain unchanged.</p>
+          <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+          <p style="font-size: 14px; color: #888888; text-align: center;">Burlington Deals | <a href="https://burlingtondeals.ca" style="color: #6B46C1; text-decoration: none;">burlingtondeals.ca</a></p>
+          <p style="font-size: 12px; color: #888888; text-align: center;">This is an automated message. Please do not reply directly to this email.</p>
+        </div>
+      </div>
+    `
   };
 
   await transporter.sendMail(mailOptions);
@@ -39,8 +77,6 @@ If you did not request this, please ignore this email.`,
  */
 router.post('/register', async (req, res) => {
   const { email, password, display_name } = req.body;
-  console.log("Registration request received for:", email);
-  
   if (!email || !password || !display_name) {
     return res.status(400).json({ error: 'Email, password, and display name are required.' });
   }
@@ -48,7 +84,6 @@ router.post('/register', async (req, res) => {
   try {
     const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (existingUser.rows.length > 0) {
-      console.log("User already exists:", email);
       return res.status(400).json({ error: 'User already exists.' });
     }
 
@@ -57,34 +92,8 @@ router.post('/register', async (req, res) => {
     // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
-    console.log("Generated verification token for:", email);
-    
-    // First check if verification_token column exists
-    try {
-      const columnCheck = await pool.query(`
-        SELECT column_name 
-        FROM information_schema.columns 
-        WHERE table_name='users' AND column_name='verification_token'
-      `);
-      
-      if (columnCheck.rows.length === 0) {
-        console.error("verification_token column does not exist in users table!");
-        // Try to add the column
-        try {
-          await pool.query(`ALTER TABLE users ADD COLUMN verification_token VARCHAR(255)`);
-          console.log("Added verification_token column to users table");
-        } catch (alterError) {
-          console.error("Failed to add verification_token column:", alterError);
-        }
-      } else {
-        console.log("verification_token column exists");
-      }
-    } catch (checkError) {
-      console.error("Error checking for verification_token column:", checkError);
-    }
     
     // Set user as inactive until verified
-    console.log("Inserting new user with verification token");
     const newUser = await pool.query(
       `INSERT INTO users (email, password_hash, display_name, created_at, role, is_active, verification_token)
        VALUES ($1, $2, $3, NOW(), $4, $5, $6)
@@ -92,52 +101,75 @@ router.post('/register', async (req, res) => {
       [email, hashedPassword, display_name, 'user', false, hashedToken]
     );
     
-    console.log("User created successfully. User ID:", newUser.rows[0].user_id);
-    
     // Create verification link
     const verificationLink = `${process.env.FRONTEND_URL || 'https://burlingtondeals.ca'}/verify-email?token=${verificationToken}`;
-    console.log("Verification link:", verificationLink);
     
-    // Send verification email
-    try {
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-      
-      if (!process.env.SENDGRID_API_KEY) {
-        console.error("SENDGRID_API_KEY is not set!");
+    // Send verification email using SendGrid
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    
+    const msg = {
+      to: email,
+      from: {
+        email: process.env.SENDGRID_FROM_EMAIL,
+        name: "Burlington Deals" // Adding sender name helps with deliverability
+      },
+      subject: 'Verify Your Burlington Deals Account',
+      text: `Hello ${display_name},
+
+Thank you for creating an account with Burlington Deals! To complete your registration and access all features, please verify your email address by clicking this link:
+
+${verificationLink}
+
+This verification link will expire in 24 hours.
+
+If you did not create an account with us, you can safely ignore this email.
+
+Best regards,
+The Burlington Deals Team
+https://burlingtondeals.ca`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="padding: 20px; background-color: #6B46C1; text-align: center;">
+            <h1 style="color: white; margin: 0;">Burlington Deals</h1>
+          </div>
+          <div style="padding: 30px; border: 1px solid #e0e0e0; border-top: none; background-color: #ffffff;">
+            <h2 style="color: #333333; margin-top: 0;">Welcome to Burlington Deals!</h2>
+            <p style="color: #555555; line-height: 1.5;">Hello ${display_name},</p>
+            <p style="color: #555555; line-height: 1.5;">Thank you for creating an account with us. To complete your registration and start discovering great local deals, please verify your email address:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${verificationLink}" style="background-color: #6B46C1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Verify My Email</a>
+            </div>
+            <p style="color: #555555; line-height: 1.5;">Or copy and paste this link in your browser:</p>
+            <div style="background-color: #f5f5f5; padding: 12px; border-radius: 4px;">
+              <a href="${verificationLink}" style="color: #6B46C1; word-break: break-all; font-size: 14px; text-decoration: none;">${verificationLink}</a>
+            </div>
+            <p style="color: #555555; line-height: 1.5; margin-top: 25px;">This verification link will expire in 24 hours.</p>
+            <p style="color: #555555; line-height: 1.5;">If you did not create this account, you can safely ignore this email.</p>
+            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+            <p style="font-size: 14px; color: #888888; text-align: center;">Burlington Deals | <a href="https://burlingtondeals.ca" style="color: #6B46C1; text-decoration: none;">burlingtondeals.ca</a></p>
+          </div>
+        </div>
+      `,
+      // These settings help avoid spam filters
+      mail_settings: {
+        bypass_list_management: {
+          enable: true
+        }
+      },
+      tracking_settings: {
+        click_tracking: {
+          enable: true
+        },
+        open_tracking: {
+          enable: true
+        }
       }
-      
-      if (!process.env.SENDGRID_FROM_EMAIL) {
-        console.error("SENDGRID_FROM_EMAIL is not set!");
-      }
-      
-      const msg = {
-        to: email,
-        from: process.env.SENDGRID_FROM_EMAIL,
-        subject: 'Verify Your Email - Burlington Deals',
-        text: `Thank you for registering! Please verify your email by clicking this link: ${verificationLink}`,
-        html: `
-          <h2>Welcome to Burlington Deals!</h2>
-          <p>Thank you for registering an account. To activate your account, please click the button below:</p>
-          <p>
-            <a href="${verificationLink}" style="background-color: #6B46C1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Verify Email Address</a>
-          </p>
-          <p>Or copy and paste this link in your browser:</p>
-          <p>${verificationLink}</p>
-          <p>This link will expire in 24 hours.</p>
-        `,
-      };
-      
-      console.log("Sending verification email to:", email);
-      await sgMail.send(msg);
-      console.log("Verification email sent successfully to:", email);
-    } catch (emailErr) {
-      console.error("Error sending verification email:", emailErr);
-      // Still continue even if email fails
-    }
+    };
+    
+    await sgMail.send(msg);
 
     // Return success without a token - user needs to verify first
-    console.log("Returning success response for registration");
     res.status(201).json({ 
       message: 'Registration successful! Please check your email to verify your account.',
       requiresVerification: true
@@ -268,33 +300,65 @@ router.post('/forgot', async (req, res) => {
 
     const resetLink = `${process.env.FRONTEND_URL || 'https://burlingtondeals.ca'}/reset-password?token=${plainToken}`;
     
-    // Use SendGrid instead of nodemailer
+    // Use SendGrid with improved email template
     const sgMail = require('@sendgrid/mail');
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     
     const msg = {
       to: user.email,
-      from: process.env.SENDGRID_FROM_EMAIL, // Must be verified in SendGrid
-      subject: 'Password Reset Request - Burlington Deals',
-      text: `You requested a password reset. Click the link below to reset your password:
+      from: {
+        email: process.env.SENDGRID_FROM_EMAIL,
+        name: "Burlington Deals"
+      },
+      subject: 'Reset Your Burlington Deals Password',
+      text: `Hello,
+
+You recently requested to reset your password for your Burlington Deals account. Click the link below to reset your password:
 
 ${resetLink}
 
-If you did not request this, please ignore this email.
+This password reset link will expire in 1 hour.
 
-This link will expire in 1 hour.`,
+If you did not request a password reset, please ignore this email and your password will remain unchanged.
+
+Best regards,
+The Burlington Deals Team`,
       html: `
-        <h2>Password Reset Request</h2>
-        <p>You requested a password reset for your Burlington Deals account.</p>
-        <p>Click the button below to reset your password:</p>
-        <p>
-          <a href="${resetLink}" style="background-color: #6B46C1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
-        </p>
-        <p>Or copy and paste this link in your browser:</p>
-        <p>${resetLink}</p>
-        <p>If you did not request this, please ignore this email.</p>
-        <p>This link will expire in 1 hour.</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="padding: 20px; background-color: #6B46C1; text-align: center;">
+            <h1 style="color: white; margin: 0;">Burlington Deals</h1>
+          </div>
+          <div style="padding: 30px; border: 1px solid #e0e0e0; border-top: none; background-color: #ffffff;">
+            <h2 style="color: #333333; margin-top: 0;">Password Reset Request</h2>
+            <p style="color: #555555; line-height: 1.5;">Hello,</p>
+            <p style="color: #555555; line-height: 1.5;">You recently requested to reset your password for your Burlington Deals account. Please click the button below to create a new password:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${resetLink}" style="background-color: #6B46C1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Reset My Password</a>
+            </div>
+            <p style="color: #555555; line-height: 1.5;">Or copy and paste this link in your browser:</p>
+            <div style="background-color: #f5f5f5; padding: 12px; border-radius: 4px;">
+              <a href="${resetLink}" style="color: #6B46C1; word-break: break-all; font-size: 14px; text-decoration: none;">${resetLink}</a>
+            </div>
+            <p style="color: #555555; line-height: 1.5; margin-top: 25px;">This link will expire in 1 hour.</p>
+            <p style="color: #555555; line-height: 1.5;">If you did not request this password reset, please ignore this email and your password will remain unchanged.</p>
+            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+            <p style="font-size: 14px; color: #888888; text-align: center;">Burlington Deals | <a href="https://burlingtondeals.ca" style="color: #6B46C1; text-decoration: none;">burlingtondeals.ca</a></p>
+          </div>
+        </div>
       `,
+      mail_settings: {
+        bypass_list_management: {
+          enable: true
+        }
+      },
+      tracking_settings: {
+        click_tracking: {
+          enable: true
+        },
+        open_tracking: {
+          enable: true
+        }
+      }
     };
 
     await sgMail.send(msg);

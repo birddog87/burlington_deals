@@ -71,7 +71,8 @@ function AddDealPage() {
     start_time: null,
     end_time: null,
     is_recurring: true,
-    wing_price_unit: 'per_wing'
+    wing_price_unit: 'per_wing',
+    isTimeSpecific: false  // New field to control time input visibility
   });
 
   const [restaurantOptions, setRestaurantOptions] = useState([]);
@@ -210,23 +211,44 @@ function AddDealPage() {
       return;
     }
 
+    if (!formData.restaurant_id) {
+      showSnackbar('Please select or add a restaurant.', 'error');
+      setLoading(false);
+      return;
+    }
+
+    // Only include time fields if isTimeSpecific is true
+    const start_time = formData.isTimeSpecific ? formData.start_time : null;
+    const end_time = formData.isTimeSpecific ? formData.end_time : null;
+
     try {
       const dayArray = formData.day_of_week;
-      const promises = dayArray.map((day) => {
+      const dealPromises = dayArray.map((day) => {
         const dataToSubmit = {
-          ...formData,
-          category: finalCategory,
+          restaurant_id: formData.restaurant_id,
+          title: formData.title,
+          description: formData.description,
+          price: formData.price,
           day_of_week: day,
-          price_per_wing
+          category: finalCategory,
+          second_category: formData.second_category || null,
+          start_time: start_time,
+          end_time: end_time,
+          price_per_wing,
+          deal_type: 'flat' // Default to flat pricing type
         };
+
+        console.log('Submitting deal data:', JSON.stringify(dataToSubmit, null, 2));
         return createDeal(dataToSubmit);
       });
 
-      await Promise.all(promises);
+      await Promise.all(dealPromises);
       showSnackbar('Deal(s) submitted successfully! You can add more deals if you\'d like.', 'success');
 
-      setFormData((prev) => ({
-        ...prev,
+      // Reset form
+      setFormData({
+        restaurant_id: '',
+        restaurant_name: '',
         title: '',
         description: '',
         price: '',
@@ -237,10 +259,17 @@ function AddDealPage() {
         start_time: null,
         end_time: null,
         is_recurring: true,
-        wing_price_unit: 'per_wing'
-      }));
+        wing_price_unit: 'per_wing',
+        isTimeSpecific: false
+      });
+      setSearchTerm('');
     } catch (err) {
-      showSnackbar('Failed to submit deal. Please try again.', 'error');
+      console.error('Error creating deal:', err);
+      console.error('Error details:', err.response?.data);
+      
+      // Show more specific error message if available
+      const errorMessage = err.response?.data?.error || 'Failed to submit deal. Please try again.';
+      showSnackbar(errorMessage, 'error');
     } finally {
       setLoading(false);
     }
@@ -287,11 +316,15 @@ function AddDealPage() {
               <Typography variant="h6">Restaurant</Typography>
             </Box>
             
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              First, search for an existing restaurant. If you can't find the restaurant, you can add a new one.
+            </Typography>
+
             <Box sx={{ position: 'relative' }}>
               <TextField
                 fullWidth
-                label="Search for a restaurant"
-                placeholder="Type restaurant name..."
+                label="Search for an existing restaurant"
+                placeholder="Type restaurant name to search..."
                 value={searchTerm}
                 onChange={handleSearchRestaurants}
                 variant="outlined"
@@ -340,19 +373,40 @@ function AddDealPage() {
               </Paper>
             )}
 
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              justifyContent: 'center',
+              my: 2
+            }}>
+              <Box sx={{ 
+                borderBottom: `1px solid ${theme.palette.divider}`, 
+                flexGrow: 1,
+                height: 0
+              }} />
+              <Typography sx={{ mx: 2, color: 'text.secondary' }}>OR</Typography>
+              <Box sx={{ 
+                borderBottom: `1px solid ${theme.palette.divider}`, 
+                flexGrow: 1,
+                height: 0
+              }} />
+            </Box>
+
             <Button
               variant="outlined"
               size="medium"
               startIcon={<AddCircleOutlineIcon />}
               onClick={() => setShowAddRestaurantDialog(true)}
               sx={{ 
-                alignSelf: 'flex-start',
+                alignSelf: 'center',
                 mb: 2,
                 borderRadius: 1.5,
-                px: 2
+                px: 2,
+                py: 1,
+                width: '100%'
               }}
             >
-              Add New Restaurant
+              Add a New Restaurant (If not found above)
             </Button>
 
             <Divider sx={{ my: 2 }} />
@@ -371,7 +425,7 @@ function AddDealPage() {
               value={formData.title}
               onChange={handleInputChange}
               variant="outlined"
-              sx={{ borderRadius: 1 }}
+              sx={{ borderRadius: 1, mb: 2 }}
             />
 
             <TextField
@@ -384,10 +438,86 @@ function AddDealPage() {
               onChange={handleInputChange}
               variant="outlined"
               placeholder="Describe the deal in detail..."
-              sx={{ borderRadius: 1 }}
+              sx={{ borderRadius: 1, mb: 3 }}
             />
 
+            {/* Categorization section - moved up */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <CategoryIcon color="primary" />
+              <Typography variant="h6">Categorization</Typography>
+            </Box>
+
+            <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
+              <InputLabel id="category-label">Primary Category</InputLabel>
+              <Select
+                labelId="category-label"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                MenuProps={customMenuProps}
+                label="Primary Category"
+              >
+                {CATEGORIES.map((cat) => (
+                  <MenuItem key={cat} value={cat} sx={{ py: 1.2 }}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {formData.category === 'Other' && (
+              <TextField
+                label="Custom Category"
+                name="customCategory"
+                fullWidth
+                value={formData.customCategory}
+                onChange={handleInputChange}
+                variant="outlined"
+                placeholder="Enter your custom category..."
+                sx={{ borderRadius: 1, mb: 2 }}
+              />
+            )}
+
+            <TextField
+              label="Secondary Category (Optional)"
+              name="second_category"
+              fullWidth
+              value={formData.second_category}
+              onChange={handleInputChange}
+              variant="outlined"
+              placeholder="Optional additional category..."
+              sx={{ borderRadius: 1, mb: 2 }}
+            />
+
+            {/* Wings pricing section - appears only for Wings category */}
+            {formData.category === 'Wings' && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>Wing Pricing:</Typography>
+                <FormControl component="fieldset" sx={{ ml: 1 }}>
+                  <RadioGroup
+                    row
+                    name="wing_price_unit"
+                    value={formData.wing_price_unit}
+                    onChange={handleInputChange}
+                  >
+                    <FormControlLabel 
+                      value="per_wing" 
+                      control={<Radio color="primary" />} 
+                      label="Price per Wing" 
+                      sx={{ mr: 4 }}
+                    />
+                    <FormControlLabel 
+                      value="per_pound" 
+                      control={<Radio color="primary" />} 
+                      label="Price per Pound" 
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+            )}
+
+            {/* Pricing section */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, mt: 2 }}>
               <AttachMoneyIcon color="primary" />
               <Typography variant="h6">Pricing</Typography>
             </Box>
@@ -400,38 +530,16 @@ function AddDealPage() {
               onChange={handleInputChange}
               variant="outlined"
               placeholder="Enter the deal price..."
-              sx={{ borderRadius: 1 }}
+              sx={{ borderRadius: 1, mb: 2 }}
             />
 
-            {formData.category === 'Wings' && (
-              <FormControl component="fieldset" sx={{ ml: 1 }}>
-                <RadioGroup
-                  row
-                  name="wing_price_unit"
-                  value={formData.wing_price_unit}
-                  onChange={handleInputChange}
-                >
-                  <FormControlLabel 
-                    value="per_wing" 
-                    control={<Radio color="primary" />} 
-                    label="Price per Wing" 
-                    sx={{ mr: 4 }}
-                  />
-                  <FormControlLabel 
-                    value="per_pound" 
-                    control={<Radio color="primary" />} 
-                    label="Price per Pound" 
-                  />
-                </RadioGroup>
-              </FormControl>
-            )}
-
+            {/* Schedule section with time-specific option */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, mt: 2 }}>
               <EventIcon color="primary" />
               <Typography variant="h6">Schedule</Typography>
             </Box>
 
-            <FormControl fullWidth variant="outlined">
+            <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
               <InputLabel id="day-of-week-label">Day(s) of Week</InputLabel>
               <Select
                 labelId="day-of-week-label"
@@ -478,32 +586,51 @@ function AddDealPage() {
               </Select>
             </FormControl>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <TimePicker
-                label="Start Time"
-                value={formData.start_time ? dayjs(formData.start_time, 'HH:mm:ss') : null}
-                onChange={handleTimeChange('start_time')}
-                slotProps={{
-                  textField: {
-                    variant: 'outlined',
-                    fullWidth: true,
-                    sx: { borderRadius: 1 }
-                  },
-                }}
-              />
-              <TimePicker
-                label="End Time"
-                value={formData.end_time ? dayjs(formData.end_time, 'HH:mm:ss') : null}
-                onChange={handleTimeChange('end_time')}
-                slotProps={{
-                  textField: {
-                    variant: 'outlined',
-                    fullWidth: true,
-                    sx: { borderRadius: 1 }
-                  },
-                }}
-              />
-            </Box>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formData.isTimeSpecific}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, isTimeSpecific: e.target.checked }))}
+                  color="primary"
+                />
+              }
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <AccessTimeIcon fontSize="small" color="action" />
+                  <Typography>This deal is only available during specific times</Typography>
+                </Box>
+              }
+              sx={{ mb: 2 }}
+            />
+
+            {formData.isTimeSpecific && (
+              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                <TimePicker
+                  label="Start Time"
+                  value={formData.start_time ? dayjs(formData.start_time, 'HH:mm:ss') : null}
+                  onChange={handleTimeChange('start_time')}
+                  slotProps={{
+                    textField: {
+                      variant: 'outlined',
+                      fullWidth: true,
+                      sx: { borderRadius: 1 }
+                    },
+                  }}
+                />
+                <TimePicker
+                  label="End Time"
+                  value={formData.end_time ? dayjs(formData.end_time, 'HH:mm:ss') : null}
+                  onChange={handleTimeChange('end_time')}
+                  slotProps={{
+                    textField: {
+                      variant: 'outlined',
+                      fullWidth: true,
+                      sx: { borderRadius: 1 }
+                    },
+                  }}
+                />
+              </Box>
+            )}
 
             <FormControlLabel
               control={
@@ -519,53 +646,6 @@ function AddDealPage() {
                   <Typography>This is a recurring deal</Typography>
                 </Box>
               }
-            />
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, mt: 2 }}>
-              <CategoryIcon color="primary" />
-              <Typography variant="h6">Categorization</Typography>
-            </Box>
-
-            <FormControl fullWidth variant="outlined">
-              <InputLabel id="category-label">Primary Category</InputLabel>
-              <Select
-                labelId="category-label"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                MenuProps={customMenuProps}
-                label="Primary Category"
-              >
-                {CATEGORIES.map((cat) => (
-                  <MenuItem key={cat} value={cat} sx={{ py: 1.2 }}>
-                    {cat}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {formData.category === 'Other' && (
-              <TextField
-                label="Custom Category"
-                name="customCategory"
-                fullWidth
-                value={formData.customCategory}
-                onChange={handleInputChange}
-                variant="outlined"
-                placeholder="Enter your custom category..."
-                sx={{ borderRadius: 1 }}
-              />
-            )}
-
-            <TextField
-              label="Secondary Category (Optional)"
-              name="second_category"
-              fullWidth
-              value={formData.second_category}
-              onChange={handleInputChange}
-              variant="outlined"
-              placeholder="Optional additional category..."
-              sx={{ borderRadius: 1 }}
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
