@@ -8,12 +8,28 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 
+// In both PrivacyPolicy.js and TermsAndConditions.js:
 const ModernPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[7],
-    backgroundColor: theme.palette.grey[50],
-}));
+    // Always use light colors regardless of theme mode
+    backgroundColor: '#ffffff',
+    color: '#333333',
+    // Override all text elements inside to ensure readability
+    '& h1, & h2, & h3, & h4, & h5, & h6, & p, & li, & span': {
+      color: '#333333',
+    },
+    '& a': {
+      color: theme.palette.primary.main,
+    },
+    // Custom styles for section titles if needed
+    '& .SectionTitle': {
+      color: '#4a4a4a',
+      borderColor: theme.palette.primary.main
+    }
+  }));
+
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
     variant: 'h4',

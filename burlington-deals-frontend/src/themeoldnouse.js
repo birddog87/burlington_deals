@@ -1,5 +1,6 @@
-import { createTheme } from '@mui/material/styles';
-import { grey, teal } from '@mui/material/colors'; // Using teal as the accent
+// src/theme.js (modified)
+import { createTheme, alpha } from '@mui/material/styles';
+import { grey, teal } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
@@ -168,6 +169,64 @@ const theme = createTheme({
         root: {
           '&:hover': {
             backgroundColor: 'rgba(0, 150, 136, 0.08)', // Light teal background on hover
+          },
+        },
+      },
+    },
+    // Add DataGrid specific styling
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          border: 'none',
+          '& .MuiDataGrid-main': {
+            width: '100%',
+          },
+          '& .MuiDataGrid-virtualScroller': {
+            minHeight: '400px',
+          },
+          '& .MuiDataGrid-columnHeaders': {
+            backgroundColor: alpha(teal[500], 0.15),
+            color: '#fff',
+            fontSize: '0.9rem',
+            fontWeight: 600,
+          },
+          '& .MuiDataGrid-cell': {
+            borderBottom: `1px solid ${alpha('#fff', 0.1)}`,
+            fontSize: '0.9rem',
+          },
+          '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within': {
+            outline: 'none',
+          },
+          '& .MuiDataGrid-row:hover': {
+            backgroundColor: alpha(teal[500], 0.1),
+          },
+          '& .MuiTablePagination-root': {
+            color: grey[300],
+          },
+          '& .MuiIconButton-root': {
+            color: grey[300],
+          },
+          '& .MuiDataGrid-toolbarContainer': {
+            padding: '8px',
+            backgroundColor: alpha('#000', 0.2),
+            borderRadius: '8px 8px 0 0',
+          },
+          '& .MuiDataGrid-footerContainer': {
+            borderTop: `1px solid ${alpha('#fff', 0.1)}`,
+          },
+        },
+        virtualScroller: {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: alpha(teal[500], 0.5),
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: alpha('#fff', 0.05),
+            borderRadius: '4px',
           },
         },
       },

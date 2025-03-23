@@ -14,6 +14,8 @@ import {
   ListItemText,
   useTheme,
   useMediaQuery,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -24,14 +26,18 @@ import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import PeopleIcon from '@mui/icons-material/People'; // For "Admin Users" link icon
-import { AuthContext } from '../context/AuthContext'; // Ensure AuthContext is correctly imported
+import PeopleIcon from '@mui/icons-material/People';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { AuthContext } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { auth, logout } = useContext(AuthContext);
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
   /**
    * Dynamically build navItems based on user's authentication and role
@@ -65,28 +71,48 @@ const Header = () => {
   };
 
   // Drawer content for mobile
-  const drawer = (
-    <Box sx={{ width: 240 }}>
-      <Box
-        sx={{
-          p: 2,
-          bgcolor: 'primary.main',
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold">
-          Burlington Deals
-        </Typography>
-      </Box>
-      <List>
-        {navItems.map((item) => (
+  // In Header.js, replace the drawer content (around line 87-165)
+const drawer = (
+  <Box sx={{ width: 240 }}>
+    <Box
+      sx={{
+        p: 2,
+        bgcolor: 'primary.main',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Typography variant="h6" fontWeight="bold">
+        Burlington Deals
+      </Typography>
+    </Box>
+    <List>
+      {navItems.map((item) => (
+        <ListItemButton
+          key={item.text}
+          component={RouterLink}
+          to={item.path}
+          sx={{
+            color: 'inherit',
+            textDecoration: 'none',
+            '&:hover': {
+              bgcolor: alpha(theme.palette.primary.light, 0.3)
+            }
+          }}
+        >
+          <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.text} />
+        </ListItemButton>
+      ))}
+      
+      {/* Only show Login & Register when NOT logged in */}
+      {!auth.token && (
+        <>
           <ListItemButton
-            key={item.text}
             component={RouterLink}
-            to={item.path}
+            to="/login"
             sx={{
               color: 'inherit',
               textDecoration: 'none',
@@ -95,87 +121,102 @@ const Header = () => {
               }
             }}
           >
-            <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
+            <ListItemIcon sx={{ color: 'inherit' }}>
+              <LoginIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
           </ListItemButton>
-        ))}
-
-        {/* If not logged in, show Login & Register */}
-        {!auth.token && (
-          <>
-            <ListItemButton
-              component={RouterLink}
-              to="/login"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.primary.light, 0.3)
-                }
-              }}
-            >
-              <ListItemIcon sx={{ color: 'inherit' }}>
-                <LoginIcon />
-              </ListItemIcon>
-              <ListItemText primary="Login" />
-            </ListItemButton>
-
-            <ListItemButton
-              component={RouterLink}
-              to="/register"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.primary.light, 0.3)
-                }
-              }}
-            >
-              <ListItemIcon sx={{ color: 'inherit' }}>
-                <AppRegistrationIcon />
-              </ListItemIcon>
-              <ListItemText primary="Register" />
-            </ListItemButton>
-          </>
-        )}
-
-        {/* If logged in, show Logout */}
-        {auth.token && (
+        
           <ListItemButton
-            onClick={handleLogout}
+            component={RouterLink}
+            to="/register"
             sx={{
               color: 'inherit',
               textDecoration: 'none',
               '&:hover': {
-                bgcolor: alpha(theme.palette.error.light, 0.3)
+                bgcolor: alpha(theme.palette.primary.light, 0.3)
               }
             }}
           >
             <ListItemIcon sx={{ color: 'inherit' }}>
-              <LogoutIcon />
+              <AppRegistrationIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Register" />
           </ListItemButton>
-        )}
-      </List>
-    </Box>
-  );
+        </>
+      )}
+      
+      {/* Only show Logout when logged in */}
+      {auth.token && (
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            color: 'inherit',
+            textDecoration: 'none',
+            '&:hover': {
+              bgcolor: alpha(theme.palette.error.light, 0.3)
+            }
+          }}
+        >
+          <ListItemIcon sx={{ color: 'inherit' }}>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItemButton>
+      )}
+      
+      {/* Theme toggle in mobile drawer */}
+      <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={darkMode}
+              onChange={toggleDarkMode}
+              color="primary"
+              sx={{
+                '& .MuiSwitch-switchBase': {
+                  color: darkMode ? 'grey.200' : 'primary.main',
+                },
+                '& .MuiSwitch-track': {
+                  backgroundColor: darkMode ? 'grey.700' : 'primary.light',
+                }
+              }}
+            />
+          }
+          label={darkMode ? "Dark Mode" : "Light Mode"}
+          sx={{
+            '& .MuiFormControlLabel-label': {
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: darkMode ? 'text.primary' : 'primary.dark'
+            }
+          }}
+        />
+      </Box>
+    </List>
+  </Box>
+);
+  
 
   return (
     <>
       <AppBar position="fixed" elevation={1} sx={{ bgcolor: 'background.paper' }}>
         <Toolbar sx={{ px: { xs: 2, sm: 4 } }}>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
+        {isMobile && (
+          <IconButton
+            color="primary" // Change from "inherit" to ensure visibility
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ 
+              mr: 2,
+              // Ensure visibility in both light and dark modes
+              color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white' 
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
 
           <Typography
             variant="h6"
@@ -191,6 +232,29 @@ const Header = () => {
           >
             Burlington Deals
           </Typography>
+
+          {/* Theme toggle switch for desktop */}
+            {!isMobile && (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={darkMode}
+                    onChange={toggleDarkMode}
+                    icon={<Brightness7Icon />}
+                    checkedIcon={<Brightness4Icon />}
+                    color="primary"
+                  />
+                }
+                label={darkMode ? "Dark" : "Light"}
+                sx={{ 
+                  mr: 2,
+                  '& .MuiFormControlLabel-label': {
+                    color: darkMode ? 'text.primary' : 'primary.dark',
+                    fontWeight: 600
+                  }
+                }}
+              />
+            )}
 
           {/* Desktop Nav */}
           {!isMobile && (

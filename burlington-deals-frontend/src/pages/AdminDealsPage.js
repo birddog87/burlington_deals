@@ -27,12 +27,15 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  useMediaQuery
+  useMediaQuery,
+  Card,
+  Divider
 } from '@mui/material';
 import { useTheme, alpha } from '@mui/material/styles';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 
+// Icons
 import StarIcon from '@mui/icons-material/Star';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -43,12 +46,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
+// Date pickers
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+// Services
 import {
   getAllDeals,
   approveDeal,
@@ -57,27 +64,430 @@ import {
   updateDeal,
   deleteDeal
 } from '../services/dealService';
+import API from '../services/api';
 
-import API from '../services/api'; // for setPromotionTier
+// Component for edit modal to reduce complexity
+const EditDealModal = ({ selectedDeal, onClose, onSave, showSnackbar }) => {
+  const theme = useTheme();
+  
+  if (!selectedDeal) return null;
+  
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: { xs: '95%', sm: 700 },
+    maxHeight: '90vh',
+    overflow: 'auto',
+    bgcolor: 'background.paper',
+    boxShadow: theme.shadows[24],
+    borderRadius: '12px',
+    p: 3
+  };
+  
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Allowed fields
+      const allowedFields = [
+        'title', 'description', 'deal_type', 'price_type', 'price',
+        'day_of_week', 'category', 'second_category', 'start_time',
+        'end_time', 'is_promoted', 'promoted_until', 'is_approved',
+        'price_per_wing', 'percentage_discount', 'promotion_tier'
+      ];
+      
+      const updatedData = Object.fromEntries(
+        Object.entries(selectedDeal).filter(([key]) => allowedFields.includes(key))
+      );
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { xs: '95%', sm: 700 },
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  borderRadius: '12px',
-  p: 3
+      // Process deal-type specific data
+      if (updatedData.deal_type === 'flat') {
+        updatedData.percentage_discount = null;
+        updatedData.flat_price = updatedData.price != null ? parseFloat(updatedData.price) : null;
+        
+        if (isNaN(updatedData.flat_price) || updatedData.flat_price < 0) {
+          showSnackbar('Invalid price for flat deal.', 'error');
+          return;
+        }
+      } else if (updatedData.deal_type === 'percentage') {
+        updatedData.flat_price = null;
+        
+        if (updatedData.percentage_discount != null) {
+          updatedData.percentage_discount = parseFloat(updatedData.percentage_discount);
+          
+          if (isNaN(updatedData.percentage_discount) ||
+              updatedData.percentage_discount <= 0 ||
+              updatedData.percentage_discount > 100) {
+            showSnackbar('Invalid percentage discount.', 'error');
+            return;
+          }
+        } else {
+          updatedData.percentage_discount = null;
+        }
+      } else if (updatedData.deal_type === 'event') {
+        updatedData.price = 0.0;
+        updatedData.flat_price = null;
+        updatedData.percentage_discount = null;
+      }
+
+      await updateDeal(selectedDeal.deal_id, updatedData);
+      showSnackbar('Deal updated successfully.', 'success');
+      onSave();
+    } catch (err) {
+      showSnackbar('Failed to update deal.', 'error');
+    }
+  };
+  
+  return (
+    <Modal open={true} onClose={onClose}>
+      <Box sx={modalStyle} component="form" onSubmit={handleSaveChanges}>
+        <Typography variant="h6" component="h2" gutterBottom color="primary" fontWeight="bold">
+          Edit Deal
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Grid container spacing={2}>
+            {/* Restaurant Name (read-only) */}
+            <Grid item xs={12}>
+              <TextField
+                label="Restaurant Name"
+                value={selectedDeal.restaurant_name || ''}
+                InputProps={{ readOnly: true }}
+                fullWidth
+                variant="filled"
+              />
+            </Grid>
+
+            {/* Restaurant ID and Title */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Restaurant ID"
+                value={selectedDeal.restaurant_id || ''}
+                disabled
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Title"
+                value={selectedDeal.title || ''}
+                onChange={(e) => onSave({ ...selectedDeal, title: e.target.value })}
+                fullWidth
+                required
+              />
+            </Grid>
+            
+            {/* Description */}
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                value={selectedDeal.description || ''}
+                onChange={(e) => onSave({ ...selectedDeal, description: e.target.value })}
+                multiline
+                minRows={3}
+                fullWidth
+                required
+              />
+            </Grid>
+            
+            {/* Deal Type */}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel id="deal-type-label">Deal Type</InputLabel>
+                <Select
+                  labelId="deal-type-label"
+                  label="Deal Type"
+                  value={selectedDeal.deal_type || 'flat'}
+                  onChange={(e) => onSave({ ...selectedDeal, deal_type: e.target.value })}
+                >
+                  <MenuItem value="flat">Flat Discount</MenuItem>
+                  <MenuItem value="percentage">Percentage Discount</MenuItem>
+                  <MenuItem value="event">Event</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            
+            {/* Price Type - Conditional */}
+            <Grid item xs={12} sm={6}>
+              {selectedDeal.deal_type !== 'event' && (
+                <FormControl fullWidth required>
+                  <Typography variant="subtitle1">Price Type</Typography>
+                  <RadioGroup
+                    row
+                    value={selectedDeal.price_type || 
+                          (selectedDeal.deal_type === 'flat' ? 'fixed' : 'percentage')}
+                    onChange={(e) => onSave({ ...selectedDeal, price_type: e.target.value })}
+                  >
+                    {selectedDeal.deal_type === 'flat' ? (
+                      <FormControlLabel value="fixed" control={<Radio />} label="Fixed" />
+                    ) : selectedDeal.deal_type === 'percentage' ? (
+                      <FormControlLabel value="percentage" control={<Radio />} label="Percentage" />
+                    ) : null}
+                  </RadioGroup>
+                </FormControl>
+              )}
+            </Grid>
+            
+            {/* Price fields based on deal type */}
+            {selectedDeal.deal_type !== 'event' && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label={selectedDeal.deal_type === 'flat' ? 'Flat Price ($)' : 'Percentage Discount (%)'}
+                  type="number"
+                  inputProps={
+                    selectedDeal.deal_type === 'flat'
+                      ? { step: '0.01', min: '0' }
+                      : { step: '0.1', min: '0', max: '100' }
+                  }
+                  value={
+                    selectedDeal.deal_type === 'flat'
+                      ? (selectedDeal.flat_price != null ? selectedDeal.flat_price : '')
+                      : (selectedDeal.percentage_discount != null ? selectedDeal.percentage_discount : '')
+                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (selectedDeal.deal_type === 'flat') {
+                      onSave({ ...selectedDeal, flat_price: value, price: value });
+                    } else if (selectedDeal.deal_type === 'percentage') {
+                      onSave({ ...selectedDeal, percentage_discount: value });
+                    }
+                  }}
+                  fullWidth
+                  required
+                />
+              </Grid>
+            )}
+            
+            {/* Additional price field for flat deals */}
+            {selectedDeal.deal_type === 'flat' && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Price ($)"
+                  type="number"
+                  inputProps={{ step: '0.01', min: '0' }}
+                  value={selectedDeal.flat_price || ''}
+                  onChange={(e) => onSave({ 
+                    ...selectedDeal, 
+                    flat_price: e.target.value, 
+                    price: e.target.value 
+                  })}
+                  fullWidth
+                  required
+                />
+              </Grid>
+            )}
+            
+            {/* Disabled price field for percentage deals */}
+            {selectedDeal.deal_type === 'percentage' && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Price ($)"
+                  type="number"
+                  value={0.0}
+                  disabled
+                  fullWidth
+                  helperText="Price is not applicable for percentage discounts."
+                />
+              </Grid>
+            )}
+            
+            {/* Day of Week */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                label="Day of Week"
+                value={selectedDeal.day_of_week || ''}
+                onChange={(e) => onSave({ ...selectedDeal, day_of_week: e.target.value })}
+                fullWidth
+                required
+              >
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                  <MenuItem key={day} value={day}>{day}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            
+            {/* Category */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                label="Category"
+                value={selectedDeal.category || ''}
+                onChange={(e) => onSave({ ...selectedDeal, category: e.target.value })}
+                fullWidth
+                required
+              >
+                <MenuItem value="">Select Category</MenuItem>
+                <MenuItem value="Wings">Wings</MenuItem>
+                <MenuItem value="Appetizers">Appetizers</MenuItem>
+                <MenuItem value="Combos">Combos</MenuItem>
+                <MenuItem value="Pasta">Pasta</MenuItem>
+                <MenuItem value="Breakfast">Breakfast</MenuItem>
+                <MenuItem value="Drinks">Drinks</MenuItem>
+                <MenuItem value="Food">Food</MenuItem>
+                <MenuItem value="Beer">Beer</MenuItem>
+                <MenuItem value="Wine">Wine</MenuItem>
+                <MenuItem value="Cocktails">Cocktails</MenuItem>
+                <MenuItem value="Happy Hour">Happy Hour</MenuItem>
+                <MenuItem value="Tacos">Tacos</MenuItem>
+                <MenuItem value="Fish & Chips">Fish & Chips</MenuItem>
+                <MenuItem value="Burgers">Burgers</MenuItem>
+                <MenuItem value="Pizza">Pizza</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </TextField>
+            </Grid>
+            
+            {/* Second Category */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Second Category"
+                value={selectedDeal.second_category || ''}
+                onChange={(e) => onSave({ ...selectedDeal, second_category: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            
+            {/* Start Time */}
+            <Grid item xs={12} sm={6}>
+              <TimePicker
+                label="Start Time"
+                value={selectedDeal.start_time ? dayjs(selectedDeal.start_time, 'HH:mm:ss') : null}
+                onChange={(newVal) => onSave({ 
+                  ...selectedDeal, 
+                  start_time: newVal ? newVal.format('HH:mm:ss') : null 
+                })}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    variant: 'outlined'
+                  }
+                }}
+              />
+            </Grid>
+            
+            {/* End Time */}
+            <Grid item xs={12} sm={6}>
+              <TimePicker
+                label="End Time"
+                value={selectedDeal.end_time ? dayjs(selectedDeal.end_time, 'HH:mm:ss') : null}
+                onChange={(newVal) => onSave({ 
+                  ...selectedDeal, 
+                  end_time: newVal ? newVal.format('HH:mm:ss') : null 
+                })}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    variant: 'outlined'
+                  }
+                }}
+              />
+            </Grid>
+            
+            {/* Promoted Until */}
+            {selectedDeal.deal_type !== 'event' && (
+              <Grid item xs={12} sm={6}>
+                <DateTimePicker
+                  label="Promoted Until"
+                  value={selectedDeal.promoted_until ? dayjs(selectedDeal.promoted_until) : null}
+                  onChange={(newVal) => onSave({ 
+                    ...selectedDeal, 
+                    promoted_until: newVal ? newVal.toISOString() : null 
+                  })}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: 'outlined'
+                    }
+                  }}
+                />
+              </Grid>
+            )}
+            
+            {/* Price Per Wing */}
+            {selectedDeal.category === 'Wings' && (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Price per Wing ($)"
+                  type="number"
+                  inputProps={{ step: '0.01', min: '0' }}
+                  value={selectedDeal.price_per_wing || ''}
+                  onChange={(e) => onSave({ ...selectedDeal, price_per_wing: e.target.value })}
+                  fullWidth
+                  required
+                />
+              </Grid>
+            )}
+          </Grid>
+        </LocalizationProvider>
+
+        <Box display="flex" justifyContent="flex-end" mt={3} gap={2}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={onClose}
+            startIcon={<CloseIcon />}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="primary" 
+            startIcon={<SaveIcon />}
+          >
+            Save Changes
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 };
 
-const snackbarTransition = (props) => <Slide {...props} direction="left" />;
+// Component for promotion tier dialog
+const PromotionTierDialog = ({ open, dealId, onClose, onSubmit }) => {
+  const [promotionTier, setPromotionTier] = useState(0);
+  
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle sx={{ fontWeight: 'bold' }}>Set Promotion Tier</DialogTitle>
+      <DialogContent>
+        <DialogContentText sx={{ mb: 2 }}>
+          Choose a tier (0 = none, 1 = category, 2 = bigger, 3 = universal, etc.).
+        </DialogContentText>
+        <TextField
+          type="number"
+          label="Promotion Tier"
+          value={promotionTier}
+          onChange={(e) => setPromotionTier(Number(e.target.value))}
+          fullWidth
+          inputProps={{ min: 0, max: 10 }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          Cancel
+        </Button>
+        <Button 
+          onClick={() => onSubmit(dealId, promotionTier)} 
+          variant="contained" 
+          color="primary"
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
+// Main component
 function AdminDealsPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // State
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDeal, setSelectedDeal] = useState(null);
@@ -85,22 +495,20 @@ function AdminDealsPage() {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, dealId: null });
-
-  // For "Promote Tier" modal
   const [tierModalOpen, setTierModalOpen] = useState(false);
   const [tierDealId, setTierDealId] = useState(null);
-  const [promotionTier, setPromotionTier] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0); // For forcing DataGrid refresh
 
+  // Snackbar helpers
   const showSnackbar = useCallback((message, severity = 'success') => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
   }, []);
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+  const handleSnackbarClose = () => setSnackbarOpen(false);
 
+  // Data fetching
   const fetchDeals = useCallback(async () => {
     setLoading(true);
     try {
@@ -117,12 +525,25 @@ function AdminDealsPage() {
     fetchDeals();
   }, [fetchDeals]);
 
-  // =============== CRUD Actions ===============
+  // Action handlers
   const handlePromote = (dealId) => {
-    // Instead of automatically promoting, open the "Set Promotion Tier" modal
     setTierDealId(dealId);
     setTierModalOpen(true);
-    // you can still do the old approach of dayjs().add(7, 'day') if you want
+  };
+
+  const handleTierModalSubmit = async (dealId, tier) => {
+    try {
+      await API.put(`/deals/${dealId}/setPromotionTier`, {
+        promotion_tier: tier
+      });
+      showSnackbar(`Deal updated to Tier ${tier} successfully.`, 'success');
+      fetchDeals();
+    } catch (err) {
+      showSnackbar('Failed to set promotion tier.', 'error');
+    } finally {
+      setTierModalOpen(false);
+      setTierDealId(null);
+    }
   };
 
   const handleUnfeature = async (dealId) => {
@@ -146,11 +567,7 @@ function AdminDealsPage() {
   };
 
   const handleEdit = (deal) => {
-    setSelectedDeal(deal);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedDeal(null);
+    setSelectedDeal({...deal});
   };
 
   const handleDelete = (dealId) => {
@@ -169,100 +586,12 @@ function AdminDealsPage() {
     }
   };
 
-  const cancelDelete = () => {
-    setDeleteConfirm({ open: false, dealId: null });
+  const handleRefresh = () => {
+    fetchDeals();
+    setRefreshKey(prev => prev + 1); // Force DataGrid to re-render
   };
 
-  // =============== Save Changes in the Edit Modal ===============
-  const handleSaveChanges = async (e) => {
-    e.preventDefault();
-    if (!selectedDeal) return;
-
-    try {
-      // Allowed fields
-      const allowedFields = [
-        'title',
-        'description',
-        'deal_type',
-        'price_type',
-        'price',
-        'day_of_week',
-        'category',
-        'second_category',
-        'start_time',
-        'end_time',
-        'is_promoted',
-        'promoted_until',
-        'is_approved',
-        'price_per_wing',
-        'percentage_discount',
-        'promotion_tier'
-      ];
-      const updatedData = Object.fromEntries(
-        Object.entries(selectedDeal).filter(([key]) => allowedFields.includes(key))
-      );
-
-      if (updatedData.deal_type === 'flat') {
-        updatedData.percentage_discount = null;
-        updatedData.flat_price =
-          updatedData.price != null ? parseFloat(updatedData.price) : null;
-        if (isNaN(updatedData.flat_price) || updatedData.flat_price < 0) {
-          return showSnackbar('Invalid price for flat deal.', 'error');
-        }
-      } else if (updatedData.deal_type === 'percentage') {
-        updatedData.flat_price = null;
-        if (updatedData.percentage_discount != null) {
-          updatedData.percentage_discount = parseFloat(updatedData.percentage_discount);
-          if (
-            isNaN(updatedData.percentage_discount) ||
-            updatedData.percentage_discount <= 0 ||
-            updatedData.percentage_discount > 100
-          ) {
-            return showSnackbar('Invalid percentage discount.', 'error');
-          }
-        } else {
-          updatedData.percentage_discount = null;
-        }
-      } else if (updatedData.deal_type === 'event') {
-        updatedData.price = 0.0;
-        updatedData.flat_price = null;
-        updatedData.percentage_discount = null;
-      }
-
-      await updateDeal(selectedDeal.deal_id, updatedData);
-      showSnackbar('Deal updated successfully.', 'success');
-      fetchDeals();
-      handleCloseModal();
-    } catch (err) {
-      showSnackbar('Failed to update deal.', 'error');
-    }
-  };
-
-  // =============== Confirm Tier Modal ===============
-  const handleTierModalSubmit = async () => {
-    if (!tierDealId) return;
-    try {
-      await API.put(`/deals/${tierDealId}/setPromotionTier`, {
-        promotion_tier: promotionTier
-      });
-      showSnackbar(`Deal updated to Tier ${promotionTier} successfully.`, 'success');
-      fetchDeals();
-    } catch (err) {
-      showSnackbar('Failed to set promotion tier.', 'error');
-    } finally {
-      setTierModalOpen(false);
-      setTierDealId(null);
-      setPromotionTier(0);
-    }
-  };
-
-  const handleTierModalClose = () => {
-    setTierModalOpen(false);
-    setTierDealId(null);
-    setPromotionTier(0);
-  };
-
-  // =============== DataGrid Columns ===============
+  // DataGrid columns definition
   const columns = [
     {
       field: 'restaurant_name',
@@ -271,10 +600,12 @@ function AdminDealsPage() {
       minWidth: 150,
       renderCell: (params) => (
         <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="body2">{params.value}</Typography>
+          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            {params.value}
+          </Typography>
           {params.row.is_promoted && (
             <Tooltip title="Featured Deal">
-              <StarIcon color="warning" />
+              <StarIcon color="warning" fontSize="small" />
             </Tooltip>
           )}
         </Box>
@@ -285,7 +616,13 @@ function AdminDealsPage() {
       headerName: 'Day',
       width: 100,
       renderCell: (params) => (
-        <Chip label={params.value} size="small" color="primary" variant="outlined" />
+        <Chip 
+          label={params.value} 
+          size="small" 
+          color="primary" 
+          variant="outlined"
+          sx={{ fontWeight: 500 }}
+        />
       )
     },
     {
@@ -293,7 +630,13 @@ function AdminDealsPage() {
       headerName: 'Category',
       width: 110,
       renderCell: (params) => (
-        <Chip label={params.value} size="small" color="secondary" variant="contained" />
+        <Chip 
+          label={params.value} 
+          size="small" 
+          color="secondary" 
+          variant="contained"
+          sx={{ fontWeight: 500 }}
+        />
       )
     },
     {
@@ -302,20 +645,19 @@ function AdminDealsPage() {
       width: 130,
       renderCell: (params) => {
         const row = params.row;
-        if (!row || !row.deal_type) {
-          return 'N/A';
-        }
+        if (!row || !row.deal_type) return 'N/A';
+        
         switch (row.deal_type) {
           case 'flat':
             return row.flat_price
-              ? `$${parseFloat(row.flat_price).toFixed(2)}`
+              ? <Typography sx={{ fontWeight: 500 }}>${parseFloat(row.flat_price).toFixed(2)}</Typography>
               : 'N/A';
           case 'percentage':
             return row.percentage_discount
-              ? `${row.percentage_discount}% off`
+              ? <Typography sx={{ fontWeight: 500 }}>{row.percentage_discount}% off</Typography>
               : 'N/A';
           case 'event':
-            return 'Event';
+            return <Chip label="Event" size="small" color="info" />;
           default:
             return 'N/A';
         }
@@ -361,13 +703,13 @@ function AdminDealsPage() {
     {
       field: 'actions',
       headerName: 'Actions',
-      // made wider so they don't overlap
       width: isMobile ? 320 : 500,
       sortable: false,
       filterable: false,
       renderCell: (params) => {
         const row = params.row;
         const approved = row.is_approved === true;
+        
         return (
           <Box display="flex" gap={1} flexWrap="wrap">
             {!approved && (
@@ -383,6 +725,7 @@ function AdminDealsPage() {
                 </Button>
               </Tooltip>
             )}
+            
             {approved && row.is_promoted ? (
               <Tooltip title="Remove from Featured">
                 <Button
@@ -408,6 +751,7 @@ function AdminDealsPage() {
                 </Button>
               </Tooltip>
             ) : null}
+            
             <Tooltip title="Edit Deal">
               <Button
                 startIcon={<EditIcon />}
@@ -419,6 +763,7 @@ function AdminDealsPage() {
                 Edit
               </Button>
             </Tooltip>
+            
             <Tooltip title="Delete Deal">
               <Button
                 startIcon={<DeleteIcon />}
@@ -438,35 +783,69 @@ function AdminDealsPage() {
 
   return (
     <Box sx={{ p: isMobile ? 2 : 3, minHeight: '80vh' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Manage Deals
-      </Typography>
+      {/* Page header with actions */}
+      <Card sx={{ p: 2, mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+          Manage Deals
+        </Typography>
+        
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<RefreshIcon />}
+          onClick={handleRefresh}
+        >
+          Refresh
+        </Button>
+      </Card>
 
+      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        TransitionComponent={snackbarTransition}
+        TransitionComponent={(props) => <Slide {...props} direction="left" />}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbarSeverity} 
+          sx={{ width: '100%' }}
+          variant="filled"
+          elevation={6}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
 
       {/* Confirm Delete Dialog */}
-      <Dialog open={deleteConfirm.open} onClose={cancelDelete}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog 
+        open={deleteConfirm.open} 
+        onClose={() => setDeleteConfirm({ open: false, dealId: null })}
+        PaperProps={{ 
+          elevation: 3,
+          sx: { borderRadius: 2 }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete this deal? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={cancelDelete} color="primary">
+          <Button 
+            onClick={() => setDeleteConfirm({ open: false, dealId: null })} 
+            color="primary"
+          >
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="error" autoFocus>
+          <Button 
+            onClick={confirmDelete} 
+            color="error" 
+            variant="contained"
+            autoFocus
+          >
             Delete
           </Button>
         </DialogActions>
@@ -478,18 +857,24 @@ function AdminDealsPage() {
         sx={{
           width: '100%',
           mt: 2,
-          p: 1
+          p: 2,
+          borderRadius: 2,
+          overflow: 'hidden'
         }}
       >
         <DataGrid
           rows={deals}
           columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10, 25, 50, 100]}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 10 } },
+            sorting: { sortModel: [{ field: 'is_approved', sort: 'asc' }] }
+          }}
+          pageSizeOptions={[10, 25, 50, 100]}
           loading={loading}
           getRowId={(row) => row.deal_id}
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           autoHeight
+          key={refreshKey} // Force re-render when refreshKey changes
           components={{
             Toolbar: GridToolbar,
             LoadingOverlay: () => (
@@ -517,396 +902,35 @@ function AdminDealsPage() {
             },
             '.MuiDataGrid-row': {
               maxHeight: '52px !important'
+            },
+            '.MuiDataGrid-columnHeaders': {
+              backgroundColor: alpha(theme.palette.primary.main, 0.08),
+              borderRadius: 1
             }
           }}
         />
       </Paper>
 
       {/* Edit Deal Modal */}
-      <Modal open={!!selectedDeal} onClose={handleCloseModal}>
-        <Box sx={modalStyle} component="form" onSubmit={handleSaveChanges}>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Edit Deal
-          </Typography>
+      {selectedDeal && (
+        <EditDealModal
+          selectedDeal={selectedDeal}
+          onClose={() => setSelectedDeal(null)}
+          onSave={(updatedDeal) => setSelectedDeal(updatedDeal)}
+          showSnackbar={showSnackbar}
+        />
+      )}
 
-          {selectedDeal && (
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Grid container spacing={2}>
-                {/* Restaurant Name (read-only) */}
-                <Grid item xs={12}>
-                  <TextField
-                    label="Restaurant Name"
-                    value={selectedDeal.restaurant_name || ''}
-                    InputProps={{
-                      readOnly: true
-                    }}
-                    fullWidth
-                  />
-                </Grid>
-                {/* Restaurant ID (disabled) */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Restaurant ID"
-                    value={selectedDeal.restaurant_id || ''}
-                    disabled
-                    fullWidth
-                  />
-                </Grid>
-                {/* Title */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Title"
-                    value={selectedDeal.title || ''}
-                    onChange={(e) =>
-                      setSelectedDeal((prev) => ({ ...prev, title: e.target.value }))
-                    }
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                {/* Description */}
-                <Grid item xs={12}>
-                  <TextField
-                    label="Description"
-                    value={selectedDeal.description || ''}
-                    onChange={(e) =>
-                      setSelectedDeal((prev) => ({ ...prev, description: e.target.value }))
-                    }
-                    multiline
-                    minRows={3}
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                {/* Deal Type */}
-                <Grid item xs={12} sm={6}>
-                  <FormControl component="fieldset" fullWidth required>
-                    <InputLabel id="deal-type-label">Deal Type</InputLabel>
-                    <Select
-                      labelId="deal-type-label"
-                      label="Deal Type"
-                      value={selectedDeal.deal_type || 'flat'}
-                      onChange={(e) =>
-                        setSelectedDeal((prev) => ({
-                          ...prev,
-                          deal_type: e.target.value
-                        }))
-                      }
-                    >
-                      <MenuItem value="flat">Flat Discount</MenuItem>
-                      <MenuItem value="percentage">Percentage Discount</MenuItem>
-                      <MenuItem value="event">Event</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                {/* Price Type - Conditional */}
-                <Grid item xs={12} sm={6}>
-                  {selectedDeal.deal_type !== 'event' && (
-                    <FormControl component="fieldset" fullWidth required>
-                      <Typography variant="subtitle1">Price Type</Typography>
-                      <RadioGroup
-                        row
-                        value={
-                          selectedDeal.price_type ||
-                          (selectedDeal.deal_type === 'flat'
-                            ? 'fixed'
-                            : 'percentage')
-                        }
-                        onChange={(e) =>
-                          setSelectedDeal((prev) => ({
-                            ...prev,
-                            price_type: e.target.value
-                          }))
-                        }
-                      >
-                        {selectedDeal.deal_type === 'flat' ? (
-                          <FormControlLabel
-                            value="fixed"
-                            control={<Radio />}
-                            label="Fixed"
-                          />
-                        ) : selectedDeal.deal_type === 'percentage' ? (
-                          <FormControlLabel
-                            value="percentage"
-                            control={<Radio />}
-                            label="Percentage"
-                          />
-                        ) : null}
-                      </RadioGroup>
-                    </FormControl>
-                  )}
-                </Grid>
-                {/* Price - Conditional */}
-                {selectedDeal.deal_type !== 'event' && (
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label={
-                        selectedDeal.deal_type === 'flat'
-                          ? 'Flat Price ($)'
-                          : 'Percentage Discount (%)'
-                      }
-                      type="number"
-                      inputProps={
-                        selectedDeal.deal_type === 'flat'
-                          ? { step: '0.01', min: '0' }
-                          : { step: '0.1', min: '0', max: '100' }
-                      }
-                      value={
-                        selectedDeal.deal_type === 'flat'
-                          ? selectedDeal.flat_price != null
-                            ? selectedDeal.flat_price
-                            : ''
-                          : selectedDeal.percentage_discount != null
-                          ? selectedDeal.percentage_discount
-                          : ''
-                      }
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setSelectedDeal((prev) => {
-                          if (prev.deal_type === 'flat') {
-                            return {
-                              ...prev,
-                              flat_price: value,
-                              price: value
-                            };
-                          } else if (prev.deal_type === 'percentage') {
-                            return {
-                              ...prev,
-                              percentage_discount: value
-                            };
-                          } else {
-                            return prev;
-                          }
-                        });
-                      }}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                )}
-                {/* Price - Flat Deals */}
-                {selectedDeal.deal_type === 'flat' && (
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Price ($)"
-                      type="number"
-                      inputProps={{ step: '0.01', min: '0' }}
-                      value={selectedDeal.flat_price || ''}
-                      onChange={(e) =>
-                        setSelectedDeal((prev) => ({
-                          ...prev,
-                          flat_price: e.target.value,
-                          price: e.target.value
-                        }))
-                      }
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                )}
-                {/* Price - Percentage Deals */}
-                {selectedDeal.deal_type === 'percentage' && (
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Price ($)"
-                      type="number"
-                      inputProps={{ step: '0.01', min: '0' }}
-                      value={0.0}
-                      disabled
-                      fullWidth
-                      helperText="Price is not applicable for percentage discounts."
-                    />
-                  </Grid>
-                )}
-                {/* Day of Week */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    label="Day of Week"
-                    value={selectedDeal.day_of_week || ''}
-                    onChange={(e) =>
-                      setSelectedDeal((prev) => ({
-                        ...prev,
-                        day_of_week: e.target.value
-                      }))
-                    }
-                    fullWidth
-                    required
-                  >
-                    {[
-                      'Monday',
-                      'Tuesday',
-                      'Wednesday',
-                      'Thursday',
-                      'Friday',
-                      'Saturday',
-                      'Sunday'
-                    ].map((day) => (
-                      <MenuItem key={day} value={day}>
-                        {day}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                {/* Category */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    label="Category"
-                    value={selectedDeal.category || ''}
-                    onChange={(e) =>
-                      setSelectedDeal((prev) => ({
-                        ...prev,
-                        category: e.target.value
-                      }))
-                    }
-                    fullWidth
-                    required
-                  >
-                    <MenuItem value="">Select Category</MenuItem>
-                    <MenuItem value="Wings">Wings</MenuItem>
-                    <MenuItem value="Appetizers">Appetizers</MenuItem>
-                    <MenuItem value="Combos">Combos</MenuItem>
-                    <MenuItem value="Pasta">Pasta</MenuItem>
-                    <MenuItem value="Breakfast">Breakfast</MenuItem>
-                    <MenuItem value="Drinks">Drinks</MenuItem>
-                    <MenuItem value="Food">Food</MenuItem>
-                    {/* etc */}
-                  </TextField>
-                </Grid>
-                {/* Second Category */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Second Category"
-                    value={selectedDeal.second_category || ''}
-                    onChange={(e) =>
-                      setSelectedDeal((prev) => ({
-                        ...prev,
-                        second_category: e.target.value
-                      }))
-                    }
-                    fullWidth
-                  />
-                </Grid>
-                {/* Start Time */}
-                <Grid item xs={12} sm={6}>
-                  <TimePicker
-                    label="Start Time"
-                    value={
-                      selectedDeal.start_time
-                        ? dayjs(selectedDeal.start_time, 'HH:mm:ss')
-                        : null
-                    }
-                    onChange={(newVal) =>
-                      setSelectedDeal((prev) => ({
-                        ...prev,
-                        start_time: newVal ? newVal.format('HH:mm:ss') : null
-                      }))
-                    }
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-                </Grid>
-                {/* End Time */}
-                <Grid item xs={12} sm={6}>
-                  <TimePicker
-                    label="End Time"
-                    value={
-                      selectedDeal.end_time
-                        ? dayjs(selectedDeal.end_time, 'HH:mm:ss')
-                        : null
-                    }
-                    onChange={(newVal) =>
-                      setSelectedDeal((prev) => ({
-                        ...prev,
-                        end_time: newVal ? newVal.format('HH:mm:ss') : null
-                      }))
-                    }
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-                </Grid>
-                {/* Promoted Until */}
-                {selectedDeal.deal_type !== 'event' && (
-                  <Grid item xs={12} sm={6}>
-                    <DateTimePicker
-                      label="Promoted Until"
-                      value={
-                        selectedDeal.promoted_until
-                          ? dayjs(selectedDeal.promoted_until)
-                          : null
-                      }
-                      onChange={(newVal) =>
-                        setSelectedDeal((prev) => ({
-                          ...prev,
-                          promoted_until: newVal ? newVal.toISOString() : null
-                        }))
-                      }
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
-                  </Grid>
-                )}
-                {/* Price Per Wing */}
-                {selectedDeal.category === 'Wings' && (
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Price per Wing ($)"
-                      type="number"
-                      inputProps={{ step: '0.01', min: '0' }}
-                      value={selectedDeal.price_per_wing || ''}
-                      onChange={(e) =>
-                        setSelectedDeal((prev) => ({
-                          ...prev,
-                          price_per_wing: e.target.value
-                        }))
-                      }
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                )}
-              </Grid>
-            </LocalizationProvider>
-          )}
-
-          <Box display="flex" justifyContent="flex-end" mt={3} gap={2}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleCloseModal}
-              startIcon={<CloseIcon />}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="contained" color="primary" startIcon={<SaveIcon />}>
-              Save Changes
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-
-      {/* Promotion Tier Modal */}
-      <Dialog open={tierModalOpen} onClose={handleTierModalClose}>
-        <DialogTitle>Set Promotion Tier</DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ mb: 2 }}>
-            Choose a tier (0 = none, 1 = category, 2 = bigger, 3 = universal, etc.).
-          </DialogContentText>
-          <TextField
-            type="number"
-            label="Promotion Tier"
-            value={promotionTier}
-            onChange={(e) => setPromotionTier(Number(e.target.value))}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleTierModalClose} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleTierModalSubmit} variant="contained" color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Promotion Tier Dialog */}
+      <PromotionTierDialog
+        open={tierModalOpen}
+        dealId={tierDealId}
+        onClose={() => {
+          setTierModalOpen(false);
+          setTierDealId(null);
+        }}
+        onSubmit={handleTierModalSubmit}
+      />
     </Box>
   );
 }
