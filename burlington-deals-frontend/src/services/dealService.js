@@ -6,6 +6,12 @@ const DEAL_API_URL = '/deals'; // Relative path (no /api needed)
 export const getApprovedDeals = async () => {
   try {
     const response = await API.get(`${DEAL_API_URL}/approved`);
+    // Debug: Check if website and rating exist in the response
+    if (response.data.length > 0) {
+      console.log('First deal from API:', response.data[0]);
+      console.log('Website field exists:', response.data[0].hasOwnProperty('website'));
+      console.log('Rating field exists:', response.data[0].hasOwnProperty('rating'));
+    }
     return response.data;
   } catch (error) {
     console.error('Error fetching approved deals:', error);

@@ -1,21 +1,22 @@
 // src/pages/HomePage.js
 import React from 'react';
-import { Typography, Box } from '@mui/material';
-import DealsTable from '../components/DealsTable';
+import { Box } from '@mui/material';
+import HeroSection from '../components/HeroSection';
+import FeaturedDeals from '../components/FeaturedDeals';
+import CategoryBrowser from '../components/CategoryBrowser';
+import TodaysDeals from '../components/TodaysDeals'; // Import the new component
+import RestaurantCta from '../components/RestaurantCta';
+import NewsletterSignup from '../components/NewsletterSignup';
 
 function HomePage() {
   return (
-    <Box className="py-4" component="main">
-      {/* Simple heading without Helmet */}
-      <Typography
-        variant="h3"
-        component="h1"
-        sx={{ fontSize: { xs: '1.875rem', sm: '2.25rem' }, fontWeight: 'bold', mb: 4 }}
-      >
-        Welcome to Burlington Deals
-      </Typography>
-
-      <DealsTable />
+    <Box component="main">
+      <HeroSection />
+      <FeaturedDeals />
+      <CategoryBrowser />
+      <TodaysDeals />
+      <RestaurantCta />
+      <NewsletterSignup />
     </Box>
   );
 }

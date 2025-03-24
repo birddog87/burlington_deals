@@ -10,323 +10,165 @@ import {
   Drawer,
   List,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   useTheme,
   useMediaQuery,
-  Switch,
-  FormControlLabel,
+  Divider,
 } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import AddIcon from '@mui/icons-material/Add';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import HomeIcon from '@mui/icons-material/Home';
-import LogoutIcon from '@mui/icons-material/Logout';
-import LoginIcon from '@mui/icons-material/Login';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import PeopleIcon from '@mui/icons-material/People';
+import CloseIcon from '@mui/icons-material/Close';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { AuthContext } from '../context/AuthContext';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { auth, logout } = useContext(AuthContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
 
-  /**
-   * Dynamically build navItems based on user's authentication and role
-   */
+  // Check if user is admin
+  const isAdmin = auth.user && auth.user.role === 'admin';
+
+  // Add console log for debugging
+  console.log("Auth state in Header:", auth);
+  console.log("Is admin?", isAdmin);
+
   const navItems = [
-    { text: 'Home', path: '/', icon: <HomeIcon /> },
+    { text: 'Home', path: '/' },
+    { text: 'All Deals', path: '/all-deals' },
+    { text: 'Restaurants', path: '/restaurants' },
+    { text: 'Submit a Deal', path: '/submit-deal' },
   ];
 
-  if (auth.token) {
-    // Add "Add Deal" for all authenticated users
-    navItems.push(
-      { text: 'Add Deal', path: '/add-deal', icon: <AddIcon /> }
-    );
+  // Admin navigation items
+  const adminItems = [
+    { text: 'Admin Dashboard', path: '/admin', icon: <DashboardIcon /> },
+    { text: 'Manage Deals', path: '/admin/deals', icon: <AdminPanelSettingsIcon /> },
+    { text: 'Manage Users', path: '/admin/users', icon: <AdminPanelSettingsIcon /> },
+  ];
 
-    // If admin, add admin-specific links
-    if (auth.user?.role === 'admin') {
-      navItems.push(
-        { text: 'Admin Deals', path: '/admin/deals', icon: <AdminPanelSettingsIcon /> },
-        { text: 'Admin Users', path: '/admin/users', icon: <PeopleIcon /> }
-      );
-    }
-  }
-
-  // Toggle for the mobile drawer
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleLogout = () => {
-    logout(); // Logout function from AuthContext
-  };
-
-  // Drawer content for mobile
-  // In Header.js, replace the drawer content (around line 87-165)
-const drawer = (
-  <Box sx={{ width: 240 }}>
-    <Box
-      sx={{
-        p: 2,
-        bgcolor: 'primary.main',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <Typography variant="h6" fontWeight="bold">
-        Burlington Deals
-      </Typography>
-    </Box>
-    <List>
-      {navItems.map((item) => (
-        <ListItemButton
-          key={item.text}
-          component={RouterLink}
-          to={item.path}
-          sx={{
-            color: 'inherit',
-            textDecoration: 'none',
-            '&:hover': {
-              bgcolor: alpha(theme.palette.primary.light, 0.3)
-            }
-          }}
-        >
-          <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.text} />
-        </ListItemButton>
-      ))}
-      
-      {/* Only show Login & Register when NOT logged in */}
-      {!auth.token && (
-        <>
-          <ListItemButton
-            component={RouterLink}
-            to="/login"
-            sx={{
-              color: 'inherit',
-              textDecoration: 'none',
-              '&:hover': {
-                bgcolor: alpha(theme.palette.primary.light, 0.3)
-              }
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <LoginIcon />
-            </ListItemIcon>
-            <ListItemText primary="Login" />
-          </ListItemButton>
-        
-          <ListItemButton
-            component={RouterLink}
-            to="/register"
-            sx={{
-              color: 'inherit',
-              textDecoration: 'none',
-              '&:hover': {
-                bgcolor: alpha(theme.palette.primary.light, 0.3)
-              }
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}>
-              <AppRegistrationIcon />
-            </ListItemIcon>
-            <ListItemText primary="Register" />
-          </ListItemButton>
-        </>
-      )}
-      
-      {/* Only show Logout when logged in */}
-      {auth.token && (
-        <ListItemButton
-          onClick={handleLogout}
-          sx={{
-            color: 'inherit',
-            textDecoration: 'none',
-            '&:hover': {
-              bgcolor: alpha(theme.palette.error.light, 0.3)
-            }
-          }}
-        >
-          <ListItemIcon sx={{ color: 'inherit' }}>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText primary="Logout" />
-        </ListItemButton>
-      )}
-      
-      {/* Theme toggle in mobile drawer */}
-      <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={darkMode}
-              onChange={toggleDarkMode}
-              color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase': {
-                  color: darkMode ? 'grey.200' : 'primary.main',
-                },
-                '& .MuiSwitch-track': {
-                  backgroundColor: darkMode ? 'grey.700' : 'primary.light',
-                }
-              }}
-            />
-          }
-          label={darkMode ? "Dark Mode" : "Light Mode"}
-          sx={{
-            '& .MuiFormControlLabel-label': {
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              color: darkMode ? 'text.primary' : 'primary.dark'
-            }
-          }}
-        />
-      </Box>
-    </List>
-  </Box>
-);
-  
-
   return (
     <>
-      <AppBar position="fixed" elevation={1} sx={{ bgcolor: 'background.paper' }}>
-        <Toolbar sx={{ px: { xs: 2, sm: 4 } }}>
-        {isMobile && (
-          <IconButton
-            color="primary" // Change from "inherit" to ensure visibility
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ 
-              mr: 2,
-              // Ensure visibility in both light and dark modes
-              color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white' 
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-
+      <AppBar 
+        position="sticky" 
+        color="transparent" 
+        elevation={0}
+        sx={{ 
+          bgcolor: darkMode ? '#121212' : '#FFFFFF',
+          borderBottom: `1px solid ${darkMode ? '#333333' : '#EEEEEE'}`
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Typography
             variant="h6"
             component={RouterLink}
             to="/"
             sx={{
-              flexGrow: 1,
-              color: 'primary.main',
-              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
               fontWeight: 700,
-              letterSpacing: '-0.5px'
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
+              color: 'text.primary',
+              textDecoration: 'none',
             }}
           >
-            Burlington Deals
+            Burlington<span style={{ color: theme.palette.primary.main }}>Deals</span>
           </Typography>
 
-          {/* Theme toggle switch for desktop */}
-            {!isMobile && (
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={darkMode}
-                    onChange={toggleDarkMode}
-                    icon={<Brightness7Icon />}
-                    checkedIcon={<Brightness4Icon />}
-                    color="primary"
-                  />
-                }
-                label={darkMode ? "Dark" : "Light"}
-                sx={{ 
-                  mr: 2,
-                  '& .MuiFormControlLabel-label': {
-                    color: darkMode ? 'text.primary' : 'primary.dark',
-                    fontWeight: 600
-                  }
-                }}
-              />
-            )}
-
-          {/* Desktop Nav */}
+          {/* Desktop Navigation */}
           {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {navItems.map((item) => (
                 <Button
                   key={item.text}
                   component={RouterLink}
                   to={item.path}
-                  startIcon={item.icon}
                   sx={{
-                    px: 2,
                     color: 'text.primary',
+                    fontWeight: 500,
+                    fontSize: '0.9rem',
                     '&:hover': {
-                      bgcolor: alpha(theme.palette.primary.light, 0.3)
-                    }
+                      backgroundColor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                    },
                   }}
                 >
                   {item.text}
                 </Button>
               ))}
 
-              {/* If not logged in, show Login & Register */}
-              {!auth.token && (
-                <>
-                  <Button
-                    component={RouterLink}
-                    to="/login"
-                    startIcon={<LoginIcon />}
-                    sx={{
-                      px: 2,
-                      color: 'primary.main',
-                      '&:hover': {
-                        bgcolor: alpha(theme.palette.primary.light, 0.3)
-                      }
-                    }}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    component={RouterLink}
-                    to="/register"
-                    startIcon={<AppRegistrationIcon />}
-                    sx={{
-                      px: 2,
-                      color: 'primary.main',
-                      '&:hover': {
-                        bgcolor: alpha(theme.palette.primary.light, 0.3)
-                      }
-                    }}
-                  >
-                    Register
-                  </Button>
-                </>
-              )}
-
-              {/* If logged in, show Logout */}
-              {auth.token && (
+              {/* Admin Menu Items - only show if user is admin */}
+              {isAdmin && (
                 <Button
-                  startIcon={<LogoutIcon />}
-                  onClick={handleLogout}
+                  component={RouterLink}
+                  to="/admin"
                   sx={{
-                    px: 2,
-                    color: 'error.main',
+                    color: theme.palette.primary.main,
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
                     '&:hover': {
-                      bgcolor: alpha(theme.palette.error.light, 0.3)
-                    }
+                      backgroundColor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                    },
                   }}
                 >
-                  Logout
+                  Admin Dashboard
                 </Button>
               )}
+              
+              {/* Theme toggle */}
+              <IconButton onClick={toggleDarkMode} sx={{ ml: 1 }}>
+                {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+              
+              {/* Login / Sign Up */}
+              {!auth.token ? (
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  sx={{
+                    ml: 2,
+                    color: 'text.primary',
+                  }}
+                >
+                  Sign In
+                </Button>
+              ) : (
+                <Button
+                  onClick={logout}
+                  sx={{
+                    ml: 2,
+                    color: 'text.primary',
+                  }}
+                >
+                  Sign Out
+                </Button>
+              )}
+            </Box>
+          )}
+
+          {/* Mobile menu button */}
+          {isMobile && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton onClick={toggleDarkMode} sx={{ mr: 1 }}>
+                {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
             </Box>
           )}
         </Toolbar>
@@ -334,25 +176,145 @@ const drawer = (
 
       {/* Mobile Drawer */}
       <Drawer
-        variant="temporary"
         anchor="left"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true // Better mobile performance
-        }}
-        sx={{
-          display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': {
-            width: 240,
-            boxSizing: 'border-box'
-          }
+        PaperProps={{
+          sx: {
+            width: '100%',
+            maxWidth: 300,
+            bgcolor: darkMode ? '#121212' : '#FFFFFF',
+          },
         }}
       >
-        {drawer}
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography
+            variant="h6"
+            component={RouterLink}
+            to="/"
+            sx={{
+              fontWeight: 700,
+              color: 'text.primary',
+              textDecoration: 'none',
+            }}
+            onClick={handleDrawerToggle}
+          >
+            Burlington<span style={{ color: theme.palette.primary.main }}>Deals</span>
+          </Typography>
+          <IconButton onClick={handleDrawerToggle}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        
+        <List>
+          {navItems.map((item) => (
+            <ListItemButton
+              key={item.text}
+              component={RouterLink}
+              to={item.path}
+              onClick={handleDrawerToggle}
+              sx={{
+                py: 1.5,
+                borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+              }}
+            >
+              <ListItemText 
+                primary={item.text} 
+                primaryTypographyProps={{ fontWeight: 500 }}
+              />
+            </ListItemButton>
+          ))}
+          
+          {/* Admin Links - Only show if user is admin */}
+          {isAdmin && (
+            <>
+              <Divider sx={{ my: 1 }} />
+              <Typography 
+                variant="subtitle2" 
+                sx={{ pl: 2, py: 1, color: theme.palette.primary.main, fontWeight: 'bold' }}
+              >
+                Admin Controls
+              </Typography>
+              
+              {adminItems.map((item) => (
+                <ListItemButton
+                  key={item.text}
+                  component={RouterLink}
+                  to={item.path}
+                  onClick={handleDrawerToggle}
+                  sx={{
+                    py: 1.5,
+                    borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+                  }}
+                >
+                  <Box sx={{ mr: 2, color: theme.palette.primary.main }}>
+                    {item.icon}
+                  </Box>
+                  <ListItemText 
+                    primary={item.text} 
+                    primaryTypographyProps={{ fontWeight: 500 }}
+                  />
+                </ListItemButton>
+              ))}
+              <Divider sx={{ my: 1 }} />
+            </>
+          )}
+          
+          {/* Add About and Contact to mobile menu */}
+          <ListItemButton
+            component={RouterLink}
+            to="/about"
+            onClick={handleDrawerToggle}
+            sx={{
+              py: 1.5,
+              borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+            }}
+          >
+            <ListItemText primary="About" primaryTypographyProps={{ fontWeight: 500 }} />
+          </ListItemButton>
+          
+          <ListItemButton
+            component={RouterLink}
+            to="/contact-us"
+            onClick={handleDrawerToggle}
+            sx={{
+              py: 1.5,
+              borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
+            }}
+          >
+            <ListItemText primary="Contact" primaryTypographyProps={{ fontWeight: 500 }} />
+          </ListItemButton>
+          
+          {/* Login/Logout in mobile menu */}
+          <ListItemButton
+            component={RouterLink}
+            to={auth.token ? '/' : '/login'}
+            onClick={() => {
+              if (auth.token) logout();
+              handleDrawerToggle();
+            }}
+            sx={{
+              py: 1.5,
+              mt: 2,
+              bgcolor: theme.palette.primary.main,
+              color: '#FFFFFF',
+              borderRadius: 1,
+              mx: 2,
+              '&:hover': {
+                bgcolor: theme.palette.primary.dark,
+              },
+            }}
+          >
+            <ListItemText 
+              primary={auth.token ? "Sign Out" : "Sign In"} 
+              primaryTypographyProps={{ 
+                fontWeight: 600, 
+                textAlign: 'center' 
+              }} 
+            />
+          </ListItemButton>
+        </List>
       </Drawer>
-
-      <Toolbar /> {/* Spacer to push content below the AppBar */}
     </>
   );
 };

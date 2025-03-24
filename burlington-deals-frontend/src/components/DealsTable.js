@@ -18,10 +18,17 @@ import {
   Select,
   InputLabel,
   Tooltip,
-  useMediaQuery
+  useMediaQuery,
+  Card,
+  CardContent,
+  CardActions,
+  Rating,
+  Divider,
+  Link,
+  IconButton
 } from '@mui/material';
-import { FilterAltOff } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { FilterAltOff, LocationOn, Language, Star, StarBorder, AccessTime, Event } from '@mui/icons-material';
+import { useTheme, alpha } from '@mui/material/styles';
 import dayjs from 'dayjs';
 
 import { getApprovedDeals } from '../services/dealService';
@@ -113,12 +120,70 @@ const ReportDealModal = ({ open, onClose, deal }) => {
   );
 };
 
-// =========== SingleDealCard =============
-  const SingleDealCard = ({ deal, onReportClick }) => {
+// =========== DealCard =============
+const DealCard = ({ deal, onReportClick }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showPerPound, setShowPerPound] = useState(false);
   const [expanded, setExpanded] = useState(false);
+
+  // Debug entire deal object
+  useEffect(() => {
+    console.log('Complete deal object:', JSON.stringify(deal, null, 2));
+  }, [deal]);
+
+  // Debug website info
+  useEffect(() => {
+    console.log('Website info:', {
+      website: deal.website,
+      hasWebsite: !!deal.website
+    });
+  }, [deal.website]);
+
+  // Debug rating info
+  useEffect(() => {
+    console.log('Rating info:', {
+      rating: deal.rating,
+      hasRating: !!deal.rating,
+      parsedRating: parseFloat(deal.rating)
+    });
+  }, [deal.rating]);
+
+  // Debug address/location info
+  useEffect(() => {
+    console.log('Location data:', { 
+      place_id: deal.place_id,
+      lat: deal.geometry_location_lat,
+      lng: deal.geometry_location_lng,
+      address: deal.address,
+      city: deal.city
+    });
+  }, [deal.place_id, deal.geometry_location_lat, deal.geometry_location_lng, deal.address, deal.city]);
+
+  // Simplified Maps URL function
+  const createMapsUrl = () => {
+    // Simplify for reliability - just use the address
+    if (deal.address) {
+      const formattedAddress = `${deal.address}`;
+      console.log('Using address URL:', formattedAddress);
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formattedAddress)}`;
+    }
+    
+    if (deal.restaurant_name) {
+      const searchQuery = `${deal.restaurant_name} ${deal.city || 'Burlington'} Ontario`;
+      console.log('Using name URL:', searchQuery);
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchQuery)}`;
+    }
+    
+    return null;
+  };
+
+  // Format website URL
+  let websiteUrl = null;
+  if (deal.website) {
+    websiteUrl = deal.website.startsWith('http') ? deal.website : `https://${deal.website}`;
+    console.log('Formatted website URL:', websiteUrl);
+  }
 
   // Price
   let displayedPrice = 'N/A';
@@ -146,165 +211,217 @@ const ReportDealModal = ({ open, onClose, deal }) => {
   const endTime = deal.end_time ? formatTime(deal.end_time) : null;
   const timeRange = startTime && endTime ? `${startTime} - ${endTime}` : startTime || endTime || null;
 
-  // Address + map link
-  const googleMapsUrl = deal.place_id
-  ? `https://www.google.com/maps/search/?api=1&query_place_id=${deal.place_id}`
-  : deal.geometry_location_lat && deal.geometry_location_lng
-    ? `https://www.google.com/maps/search/?api=1&query=${deal.geometry_location_lat},${deal.geometry_location_lng}`
-    : deal.address
-      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(deal.address)}`
-      : null;
-
-
   // Description
   const FULL_DESC = deal.description || '';
   const SHORT_DESC = FULL_DESC.slice(0, 120);
   const isLong = FULL_DESC.length > 120;
   const displayedDesc = expanded ? FULL_DESC : SHORT_DESC;
 
+  // Maps URL
+  const mapsUrl = createMapsUrl();
+
   return (
-    <Paper
+    <Card 
       elevation={2}
       sx={{
-        p: 2,
-        mb: 2,
+        mb: 3,
         borderRadius: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1
+        overflow: 'visible',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        '&:hover': {
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          transform: 'translateY(-2px)'
+        },
+        ...(deal.is_promoted && {
+          border: `1px solid ${theme.palette.primary.main}`,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 16,
+            width: 0,
+            height: 0,
+            borderStyle: 'solid',
+            borderWidth: '0 24px 24px 0',
+            borderColor: `transparent ${theme.palette.primary.main} transparent transparent`,
+            zIndex: 1
+          }
+        })
       }}
     >
-      {/* Restaurant + Featured */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', fontSize: isMobile ? '1rem' : '1.2rem' }}
-        >
-          {deal.restaurant_name}
-          {deal.is_promoted && (
-            <Chip
-              label="Featured"
-              size="small"
-              sx={{
-                ml: 1,
-                backgroundColor: '#00c896',
-                color: '#fff',
-                fontWeight: 'bold'
-              }}
-            />
-          )}
-        </Typography>
-      </Box>
-
-      {/* Address row */}
-      {deal.address && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: 1
-          }}
-        >
-          <Typography variant="body2" sx={{ color: '#666' }}>
-            {deal.address}
+      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+        {/* Restaurant Name and Rating */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Typography 
+            variant="h5" 
+            component="h2" 
+            sx={{ 
+              fontWeight: 600,
+              color: 'text.primary',
+              fontSize: { xs: '1.25rem', sm: '1.5rem' }
+            }}
+          >
+            {deal.restaurant_name}
+            {deal.is_promoted && (
+              <Chip
+                size="small"
+                label="Featured"
+                sx={{
+                  ml: 1,
+                  fontWeight: 'bold',
+                  bgcolor: theme.palette.primary.main,
+                  color: '#fff'
+                }}
+              />
+            )}
           </Typography>
-          {googleMapsUrl && (
+          
+          {(deal.rating !== undefined && deal.rating !== null) && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Rating 
+                value={parseFloat(deal.rating) || 0} 
+                precision={0.5} 
+                readOnly 
+                size="small"
+                emptyIcon={<StarBorder fontSize="inherit" />}
+              />
+              <Typography variant="body2" sx={{ ml: 0.5, color: 'text.secondary' }}>
+                ({parseFloat(deal.rating || 0).toFixed(1)})
+              </Typography>
+            </Box>
+          )}
+        </Box>
+        
+        {/* Address and External Links */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+            {deal.address}
+            {deal.city && `, ${deal.city}`}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {mapsUrl && (
+              <Button 
+                startIcon={<LocationOn />}
+                size="small" 
+                variant="outlined"
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => console.log('Maps button clicked, URL:', mapsUrl)}
+                sx={{ borderRadius: '20px' }}
+              >
+                View on Maps
+              </Button>
+            )}
+            
+            {websiteUrl && (
+              <Button
+                startIcon={<Language />}
+                size="small"
+                variant="outlined"
+                href={websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => console.log('Website button clicked, URL:', websiteUrl)}
+                sx={{ borderRadius: '20px' }}
+              >
+                Website
+              </Button>
+            )}
+          </Box>
+        </Box>
+        
+        <Divider sx={{ my: 1.5 }} />
+        
+        {/* Deal Information */}
+        <Box sx={{ my: 2 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+            <Chip 
+              icon={<Event />}
+              label={deal.day_of_week} 
+              color="primary" 
+              size="small"
+              sx={{ fontWeight: 500 }}
+            />
+            
+            <Chip 
+              label={deal.category} 
+              color="secondary" 
+              size="small"
+              sx={{ fontWeight: 500 }}
+            />
+            
+            {timeRange && (
+              <Chip 
+                icon={<AccessTime />}
+                label={timeRange} 
+                variant="outlined" 
+                size="small"
+                sx={{ fontWeight: 500 }}
+              />
+            )}
+          </Box>
+          
+          {/* Wing Price Toggle */}
+          {deal.category === 'Wings' && (
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <Typography variant="caption" sx={{ mr: 1 }}>Per wing</Typography>
+              <Switch
+                size="small"
+                checked={showPerPound}
+                onChange={() => setShowPerPound(!showPerPound)}
+              />
+              <Typography variant="caption" sx={{ ml: 1 }}>Per pound</Typography>
+            </Box>
+          )}
+          
+          {/* Price Display */}
+          <Typography 
+            variant="h4" 
+            component="p" 
+            sx={{ 
+              color: theme.palette.primary.main, 
+              fontWeight: 700,
+              fontSize: { xs: '1.75rem', sm: '2rem' },
+              my: 1
+            }}
+          >
+            {displayedPrice}
+          </Typography>
+          
+          {/* Description */}
+          <Typography variant="body1" sx={{ mt: 2, color: 'text.primary', whiteSpace: 'pre-wrap' }}>
+            {displayedDesc}
+            {isLong && !expanded && '...'}
+          </Typography>
+          
+          {isLong && (
             <Button
               variant="text"
               size="small"
-              onClick={() => window.open(googleMapsUrl, '_blank')}
+              onClick={() => setExpanded(!expanded)}
+              sx={{ p: 0, mt: 1, fontSize: '0.875rem' }}
             >
-              View on Maps
+              {expanded ? 'Show Less' : 'Read More'}
             </Button>
           )}
         </Box>
-      )}
+      </CardContent>
 
-      {/* Day, Category, Times */}
-      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {deal.day_of_week && (
-          <Chip
-            label={deal.day_of_week}
-            size="small"
-            sx={{ backgroundColor: '#00c896', color: '#fff', fontWeight: 'bold' }}
-          />
-        )}
-        {deal.category && (
-          <Chip
-            label={deal.category}
-            size="small"
-            sx={{ backgroundColor: '#333', color: '#fff', fontWeight: 'bold' }}
-          />
-        )}
-        {timeRange && (
-          <Chip
-            label={timeRange}
-            variant="outlined"
-            size="small"
-          />
-        )}
-      </Box>
-
-      {/* Wing Switch */}
-      {deal.category === 'Wings' && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="caption" sx={{ color: '#777' }}>
-            {showPerPound ? 'Per lb' : 'Per wing'}
-          </Typography>
-          <Switch
-            size="small"
-            checked={showPerPound}
-            onChange={(e) => setShowPerPound(e.target.checked)}
-            sx={{
-              '& .MuiSwitch-switchBase.Mui-checked': {
-                color: '#00c896'
-              },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: '#00c896'
-              }
-            }}
-          />
-        </Box>
-      )}
-
-      {/* Price */}
-      <Typography
-        variant="body1"
-        sx={{
-          fontWeight: 'bold',
-          color: deal.deal_type === 'event' ? '#999' : '#00c896'
-        }}
-      >
-        {displayedPrice}
-      </Typography>
-
-      {/* Description with read-more */}
-      <Typography variant="body2" sx={{ color: '#555', whiteSpace: 'pre-wrap' }}>
-        {displayedDesc}
-        {isLong && !expanded && '...'}
-      </Typography>
-      {isLong && (
-        <Button
-          variant="text"
-          size="small"
-          onClick={() => setExpanded(!expanded)}
-          sx={{ p: 0, minWidth: 0 }}
+      <CardActions sx={{ px: 3, py: 1, justifyContent: 'flex-end' }}>
+        <Button 
+          variant="outlined" 
+          color="error" 
+          size="small" 
+          onClick={onReportClick}
+          sx={{ borderRadius: '20px' }}
         >
-          {expanded ? 'Show Less' : 'Read More'}
+          Report Deal
         </Button>
-      )}
-
-      {/* "Report Deal" at the bottom, no absolute positioning */}
-      <Box sx={{ mt: 1, textAlign: 'right' }}>
-        <Tooltip title="Found something wrong with this deal? Click to report.">
-          <Button variant="outlined" color="error" size="small" onClick={onReportClick} >
-            {/* Parent will handle the onClick -> see DealsTable below */}
-            Report Deal
-          </Button>
-        </Tooltip>
-      </Box>
-    </Paper>
+      </CardActions>
+    </Card>
   );
 };
 
@@ -355,6 +472,9 @@ const DealsTable = () => {
       setLoading(true);
       try {
         const data = await getApprovedDeals();
+        
+        // Debug API response
+        console.log('API Response first item:', data.length > 0 ? data[0] : 'No deals');
         
         // Store the deals without sorting them yet
         setDeals(data || []);
@@ -409,19 +529,28 @@ const DealsTable = () => {
 
     // Check if we're in "All Days" mode and should prioritize current day
     if (filters.day === 'all') {
-      // Split deals into current day and other days
-      const currentDayDeals = filtered.filter(deal => deal.day_of_week === currentDay);
-      const otherDayDeals = filtered.filter(deal => deal.day_of_week !== currentDay);
+      // First, sort by promotion_tier in descending order
+      const sortedByTier = [...filtered].sort((a, b) => 
+        (b.promotion_tier || 0) - (a.promotion_tier || 0)
+      );
       
-      // Shuffle each group separately to randomize order
-      const shuffledCurrentDay = shuffleArray(currentDayDeals);
-      const shuffledOtherDays = shuffleArray(otherDayDeals);
+      // Then split by current day within each tier
+      const result = [];
+      const tiers = [...new Set(sortedByTier.map(deal => deal.promotion_tier || 0))];
       
-      // Return current day deals first, then other days
-      return [...shuffledCurrentDay, ...shuffledOtherDays];
+      tiers.forEach(tier => {
+        const tierDeals = sortedByTier.filter(deal => (deal.promotion_tier || 0) === tier);
+        const currentDayDeals = tierDeals.filter(deal => deal.day_of_week === currentDay);
+        const otherDayDeals = tierDeals.filter(deal => deal.day_of_week !== currentDay);
+        
+        // Add current day deals first, then other days
+        result.push(...shuffleArray(currentDayDeals), ...shuffleArray(otherDayDeals));
+      });
+      
+      return result;
     } else {
-      // If a specific day is selected, just shuffle all matching deals
-      return shuffleArray(filtered);
+      // If a specific day is selected, just sort by promotion tier
+      return [...filtered].sort((a, b) => (b.promotion_tier || 0) - (a.promotion_tier || 0));
     }
   }, [deals, filters, searchTerm, currentDay]);
 
@@ -432,6 +561,7 @@ const DealsTable = () => {
     setReportDealObj(deal);
     setReportModalOpen(true);
   };
+  
   const handleCloseReport = () => {
     setReportModalOpen(false);
     setReportDealObj(null);
@@ -440,7 +570,26 @@ const DealsTable = () => {
   return (
     <Box>
       {/* Filter UI */}
-      <Box sx={{ mb: 4 }}>
+      <Paper 
+        elevation={3} 
+        sx={{ 
+          p: 3, 
+          mb: 4, 
+          borderRadius: 2,
+          backgroundColor: theme.palette.background.paper
+        }}
+      >
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            mb: 2,
+            fontWeight: 600,
+            color: theme.palette.primary.main
+          }}
+        >
+          Find Your Perfect Deal
+        </Typography>
+        
         <Stack direction="column" spacing={2}>
           <TextField
             placeholder="Search for deals, restaurants, or categories..."
@@ -449,6 +598,9 @@ const DealsTable = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             fullWidth
+            InputProps={{
+              sx: { borderRadius: '8px' }
+            }}
           />
 
           <Grid container spacing={2}>
@@ -461,6 +613,9 @@ const DealsTable = () => {
                 variant="outlined"
                 size="small"
                 fullWidth
+                InputProps={{
+                  sx: { borderRadius: '8px' }
+                }}
               >
                 <MenuItem value="all">All Restaurants</MenuItem>
                 {getUnique(deals, 'restaurant_name').map((r) => (
@@ -480,6 +635,9 @@ const DealsTable = () => {
                 variant="outlined"
                 size="small"
                 fullWidth
+                InputProps={{
+                  sx: { borderRadius: '8px' }
+                }}
               >
                 <MenuItem value="all">All Days</MenuItem>
                 {['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map((d) => (
@@ -497,6 +655,9 @@ const DealsTable = () => {
                 variant="outlined"
                 size="small"
                 fullWidth
+                InputProps={{
+                  sx: { borderRadius: '8px' }
+                }}
               >
                 <MenuItem value="all">All Categories</MenuItem>
                 {getUnique(deals, 'category').map((cat) => (
@@ -514,10 +675,13 @@ const DealsTable = () => {
                 variant="outlined"
                 size="small"
                 fullWidth
+                InputProps={{
+                  sx: { borderRadius: '8px' }
+                }}
               >
                 <MenuItem value="all">All Types</MenuItem>
-                <MenuItem value="flat">Flat</MenuItem>
-                <MenuItem value="percentage">Percentage</MenuItem>
+                <MenuItem value="flat">Price</MenuItem>
+                <MenuItem value="percentage">Discount</MenuItem>
                 <MenuItem value="event">Event</MenuItem>
               </TextField>
             </Grid>
@@ -529,12 +693,16 @@ const DealsTable = () => {
               color="secondary"
               startIcon={<FilterAltOff />}
               onClick={clearFilters}
+              sx={{ 
+                borderRadius: '8px',
+                px: 3
+              }}
             >
               Clear Filters
             </Button>
           </Box>
         </Stack>
-      </Box>
+      </Paper>
 
       {/* Deal Cards */}
       {loading ? (
@@ -542,28 +710,45 @@ const DealsTable = () => {
           <CircularProgress />
         </Box>
       ) : paginatedDeals.length === 0 ? (
-        <Typography textAlign="center">No deals found.</Typography>
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            p: 4, 
+            textAlign: 'center',
+            borderRadius: 2
+          }}
+        >
+          <Typography variant="h6" gutterBottom>No deals found</Typography>
+          <Typography variant="body1" color="text.secondary">
+            Try adjusting your filters or search criteria to see more results.
+          </Typography>
+        </Paper>
       ) : (
         paginatedDeals.map((deal) => (
-          <Box key={deal.deal_id}>
-            <SingleDealCard 
-              deal={deal} 
-              onReportClick={() => handleOpenReport(deal)} 
-            />
-          </Box>
+          <DealCard 
+            key={deal.deal_id}
+            deal={deal} 
+            onReportClick={() => handleOpenReport(deal)} 
+          />
         ))
       )}
 
       {/* Pagination */}
-      {paginatedDeals.length > 0 && (
+      {paginatedDeals.length > 0 && pageCount > 1 && (
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
           <Pagination
             count={pageCount}
             page={page}
             onChange={(e, val) => setPage(val)}
-            variant="outlined"
             color="primary"
             size={isMobile ? 'small' : 'medium'}
+            showFirstButton
+            showLastButton
+            sx={{
+              '& .MuiPaginationItem-root': {
+                borderRadius: '8px',
+              }
+            }}
           />
         </Box>
       )}

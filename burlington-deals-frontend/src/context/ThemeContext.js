@@ -3,30 +3,68 @@ import React, { createContext, useState, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from '../themes';
 
-export const ThemeContext = createContext({
-  darkMode: false,
-  toggleDarkMode: () => {},
-});
+// Create context
+export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // Check local storage for theme preference or default to light mode
+  // Initialize state from localStorage or system preference
   const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('darkMode');
-    return savedTheme === 'true';
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+      return savedMode === 'true';
+    }
+    // If no saved preference, use system preference
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
-
-  // Save preference to local storage
+  // Update localStorage when mode changes
   useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
     
-    // Update body background color for smooth transitions
-    document.body.style.backgroundColor = darkMode ? '#121212' : '#F9FAFB';
+    // Update document body class for additional styling if needed
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+      document.body.classList.remove('light-mode');
+    } else {
+      document.body.classList.add('light-mode');
+      document.body.classList.remove('dark-mode');
+    }
   }, [darkMode]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e) => {
+      // Only update if user hasn't set a preference
+      if (localStorage.getItem('darkMode') === null) {
+        setDarkMode(e.matches);
+      }
+    };
+    
+    // Add listener for theme changes
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handleChange);
+    }
+    
+    // Cleanup
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        // Fallback for older browsers
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  // Toggle between light and dark modes
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => !prevMode);
+  };
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>

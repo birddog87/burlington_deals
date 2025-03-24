@@ -27,8 +27,14 @@ router.get('/approved', async (req, res) => {
         d.flat_price,
         d.percentage_discount,
         r.name AS restaurant_name,
-        r.address AS address,
+        r.address,
+        r.city,
         r.place_id,
+        r.geometry_location_lat,
+        r.geometry_location_lng,
+        r.website,
+        r.rating,
+        r.user_ratings_total,
         d.created_at,
         d.updated_at,
         d.start_time,
@@ -42,8 +48,20 @@ router.get('/approved', async (req, res) => {
       ORDER BY d.promotion_tier DESC, d.is_promoted DESC, d.created_at DESC;
     `;
     const result = await pool.query(sql);
+    
+    // Log first result for debugging
+    if (result.rows.length > 0) {
+      console.log('First deal data from database:', JSON.stringify({
+        deal_id: result.rows[0].deal_id,
+        restaurant_id: result.rows[0].restaurant_id,
+        website: result.rows[0].website,
+        rating: result.rows[0].rating
+      }));
+    }
+    
     res.json(result.rows);
   } catch (err) {
+    console.error('Error in /approved route:', err);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
