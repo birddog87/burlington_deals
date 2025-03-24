@@ -131,16 +131,28 @@ const Header = () => {
               
               {/* Login / Sign Up */}
               {!auth.token ? (
-                <Button
-                  component={RouterLink}
-                  to="/login"
-                  sx={{
-                    ml: 2,
-                    color: 'text.primary',
-                  }}
-                >
-                  Sign In
-                </Button>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to="/login"
+                    sx={{
+                      color: 'text.primary',
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    component={RouterLink}
+                    to="/register"
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      borderRadius: 2,
+                    }}
+                  >
+                    Register
+                  </Button>
+                </Box>
               ) : (
                 <Button
                   onClick={logout}
@@ -286,33 +298,52 @@ const Header = () => {
           </ListItemButton>
           
           {/* Login/Logout in mobile menu */}
-          <ListItemButton
-            component={RouterLink}
-            to={auth.token ? '/' : '/login'}
-            onClick={() => {
-              if (auth.token) logout();
-              handleDrawerToggle();
-            }}
-            sx={{
-              py: 1.5,
-              mt: 2,
-              bgcolor: theme.palette.primary.main,
-              color: '#FFFFFF',
-              borderRadius: 1,
-              mx: 2,
-              '&:hover': {
-                bgcolor: theme.palette.primary.dark,
-              },
-            }}
-          >
-            <ListItemText 
-              primary={auth.token ? "Sign Out" : "Sign In"} 
-              primaryTypographyProps={{ 
-                fontWeight: 600, 
-                textAlign: 'center' 
-              }} 
-            />
-          </ListItemButton>
+          <Box sx={{ display: 'flex', gap: 2, mt: 2, px: 2 }}>
+            {auth.token ? (
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  logout();
+                  handleDrawerToggle();
+                }}
+                sx={{
+                  py: 1.5,
+                  bgcolor: theme.palette.primary.main,
+                  color: '#FFFFFF',
+                  borderRadius: 1,
+                  '&:hover': {
+                    bgcolor: theme.palette.primary.dark,
+                  },
+                }}
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleDrawerToggle}
+                  sx={{ py: 1.5 }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/register"
+                  variant="contained"
+                  fullWidth
+                  onClick={handleDrawerToggle}
+                  sx={{ py: 1.5 }}
+                >
+                  Register
+                </Button>
+              </>
+            )}
+          </Box>
         </List>
       </Drawer>
     </>

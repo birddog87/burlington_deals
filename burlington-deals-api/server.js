@@ -9,6 +9,7 @@ const restaurantRoutes = require('./routes/restaurantRoutes');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const newsletterRoutes = require('./routes/newsletterRoutes');
 const { authenticateToken, authorizeAdmin } = require('./middlewares/authMiddleware');
 
 const app = express();
@@ -43,6 +44,10 @@ app.use('/api/admin', authenticateToken, authorizeAdmin, adminRoutes);
 
 // Contact routes
 app.use('/api/contact', contactRoutes);
+// newsletter connection 
+app.use('/api/newsletter', newsletterRoutes);
+
+
 
 // 404 handler
 app.use((req, res) => {
