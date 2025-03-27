@@ -159,12 +159,6 @@ const Footer = () => {
                 </Link>
               </Box>
               
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <PhoneIcon fontSize="small" color="action" />
-                <Typography variant="body2" color="text.secondary">
-                  (123) 456-7890
-                </Typography>
-              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -177,7 +171,17 @@ const Footer = () => {
           </Typography>
           
           <Typography variant="body2" color="text.secondary">
-            Made with <FavoriteIcon sx={{ fontSize: 14, mx: 0.5, color: '#FF5533' }} /> in Burlington
+            Made with <FavoriteIcon sx={{ fontSize: 14, mx: 0.5, color: '#FF5533' }} />
+            by{' '}
+            <Link
+              href="https://hammnd.com"
+              target="_blank"
+              rel="noopener"
+              underline="hover"
+              sx={{ color: 'text.secondary', fontWeight: 500 }}
+            >
+              HAMMND.COM
+            </Link>
           </Typography>
         </Box>
       </Container>
